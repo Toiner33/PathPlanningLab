@@ -16,10 +16,13 @@ find_package(
 include_directories(include)
 
 # UI Source files
-set(UI_SOURCE_FILES 
+set(UI_SOURCE_FILES
+    src/ui/graphics_scene.cpp
     src/ui/main_window.cpp
     src/ui/main.cpp
-    include/ui/main_window.hpp # Needed here to trigger the MOC for Q_OBJECT Macro
+    # Needed here to trigger the MOC for Q_OBJECT Macro
+    include/ui/main_window.hpp
+    include/ui/graphics_scene.hpp
 )
 
 # Create the executable

@@ -3,6 +3,7 @@
 #include <QMainWindow>
 
 #include "ui/resources/ui_main_window.h"
+#include "ui/graphics_scene.hpp"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -13,4 +14,5 @@ public:
 
 private:
     Ui::MainWindow ui;
+    GraphicsScene* scene;
 };
