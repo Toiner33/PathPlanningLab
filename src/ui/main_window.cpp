@@ -9,8 +9,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui.setupUi(this);
 
     // Connect events
-    QObject::connect(ui.pushButton, &QPushButton::clicked, this, [] {
+    QObject::connect(ui.runAlgorithmBt, &QPushButton::clicked, this, [] {
         QMessageBox::information(nullptr, "Path Planning", "Running algorithm!");
+    });
+
+
+    QObject::connect(ui.drivableBt, &QPushButton::clicked, this, [] {
+        QMessageBox::information(nullptr, "Drawing mode", "Drawing drivable area!");
     });
 
     scene = new GraphicsScene(this);

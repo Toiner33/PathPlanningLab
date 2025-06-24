@@ -12,6 +12,8 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -24,8 +26,11 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QPushButton *pushButton;
+    QGridLayout *gridLayout;
+    QPushButton *runAlgorithmBt;
     QGraphicsView *graphicsView;
+    QGroupBox *groupBox;
+    QPushButton *drivableBt;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -33,19 +38,34 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(799, 595);
+        MainWindow->resize(839, 696);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        pushButton = new QPushButton(centralwidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(660, 10, 121, 41));
+        gridLayout = new QGridLayout(centralwidget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        runAlgorithmBt = new QPushButton(centralwidget);
+        runAlgorithmBt->setObjectName(QString::fromUtf8("runAlgorithmBt"));
+        runAlgorithmBt->setMinimumSize(QSize(113, 23));
+
+        gridLayout->addWidget(runAlgorithmBt, 0, 1, 1, 1);
+
         graphicsView = new QGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        graphicsView->setGeometry(QRect(10, 10, 631, 531));
+
+        gridLayout->addWidget(graphicsView, 0, 0, 6, 1);
+
+        groupBox = new QGroupBox(centralwidget);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        drivableBt = new QPushButton(groupBox);
+        drivableBt->setObjectName(QString::fromUtf8("drivableBt"));
+        drivableBt->setGeometry(QRect(10, 30, 93, 23));
+
+        gridLayout->addWidget(groupBox, 1, 1, 2, 1);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 799, 20));
+        menubar->setGeometry(QRect(0, 0, 839, 20));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -59,7 +79,9 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "Run algorithm", nullptr));
+        runAlgorithmBt->setText(QCoreApplication::translate("MainWindow", "Run algorithm", nullptr));
+        groupBox->setTitle(QCoreApplication::translate("MainWindow", "Drawing Tools", nullptr));
+        drivableBt->setText(QCoreApplication::translate("MainWindow", "Drivable", nullptr));
     } // retranslateUi
 
 };
