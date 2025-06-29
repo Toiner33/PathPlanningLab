@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.22)
 
 project(PathPlannerApp)
 
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -27,6 +29,11 @@ set(UI_SOURCE_FILES
 
 # Create the executable
 add_executable(${PROJECT_NAME} ${UI_SOURCE_FILES})
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Debug mode enabled")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG_MODE=1)
+endif()
 
 # Link Qt5 if needed
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
