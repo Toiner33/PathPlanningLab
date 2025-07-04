@@ -8,6 +8,8 @@
 
 #include "utils/visuals/colors.hpp"
 #include "utils/geometry/smart_polygon.hpp"
+#include "utils/geometry/smart_multi_polygon.hpp"
+
 
 #include "ui/resources/ui_main_window.h"
 #include "ui/graphics_scene.hpp"
@@ -28,8 +30,7 @@ private slots:
 private:
     Ui::MainWindow ui;
     std::shared_ptr<GraphicsScene> scene;
-
-    std::vector<
-        std::shared_ptr<utils::geometry::SmartPolygon>
-    > drivablePolygon;
+    
+    utils::geometry::SmartPolygon::SharedPtr currentPolygon;
+    utils::geometry::SmartMultiPolygon drivablePolygon;
 };

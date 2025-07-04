@@ -15,6 +15,9 @@ namespace geometry {
 
 class SmartPolygon : public QGraphicsPolygonItem {
 public:
+    using SharedPtr = std::shared_ptr<SmartPolygon>;
+    using UniquePtr = std::unique_ptr<SmartPolygon>;
+
     SmartPolygon(const visuals::PolygonDesign& polygonDesign);
     SmartPolygon(const poly::PolygonType& newPolygon, const visuals::PolygonDesign& polygonDesign);
     SmartPolygon(const QPolygonF& newPolygon, const visuals::PolygonDesign& polygonDesign);

@@ -5,7 +5,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-    scene(std::make_shared<GraphicsScene>(this))
+    scene(std::make_shared<GraphicsScene>(this)),
+    drivablePolygon(scene)
 {
     ui.setupUi(this);
     ui.graphicsView->setScene(scene.get());
@@ -29,29 +30,30 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow() {}
 
 void MainWindow::onStartDrawing() {
-    drivablePolygon.emplace_back(
-        std::make_shared<utils::geometry::SmartPolygon>(
-            utils::visuals::colors::drivableGreen
-        )
-    );
+    if (!currentPolygon) {
+        currentPolygon = std::make_shared<utils::geometry::SmartPolygon>(
+            utils::visuals::colors::drivableGreen);
+    }
+
+    drivablePolygon.addPolygon(currentPolygon);
     scene->setDrawingEnabled(true);
-    scene->addItem(drivablePolygon.back().get());
 }
 
 void MainWindow::onPointClicked(QPointF point) {
-    drivablePolygon.back()->addPoint(point);
+    currentPolygon->addPoint(point);
 }
 
 void MainWindow::onDoubleClick(QPointF point) {
-    scene->setDrawingEnabled(false);
-    drivablePolygon.back()->addPoint(point);
-    if (!drivablePolygon.back()->finalizePolygon()) {
-        scene->removeItem(drivablePolygon.back().get());
-        drivablePolygon.pop_back();
-        return;
+    currentPolygon->addPoint(point);
+
+    if (!currentPolygon->finalizePolygon()) {
+        drivablePolygon.popPolygon();
     }
+
+    currentPolygon.reset();
+    scene->setDrawingEnabled(false);
 }
 
 void MainWindow::onCursorMoved(QPointF point) {
-    drivablePolygon.back()->setPreview(point);
+    currentPolygon->setPreview(point);
 }
