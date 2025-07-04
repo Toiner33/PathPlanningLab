@@ -14,21 +14,24 @@ find_package(
     Qt5 REQUIRED COMPONENTS Widgets # Qt5 For the ui
 )
 
+# ignore BOOST deprecated messages
+add_definitions("-DBOOST_ALLOW_DEPRECATED_HEADERS")
+
 # Include directories
 include_directories(include)
 
-# UI Source files
-set(UI_SOURCE_FILES
-    src/ui/graphics_scene.cpp
-    src/ui/main_window.cpp
-    src/ui/main.cpp
+file(GLOB UI_SOURCE_FILES
+    src/ui/*.cpp
     # Needed here to trigger the MOC for Q_OBJECT Macro
-    include/ui/main_window.hpp
-    include/ui/graphics_scene.hpp
+    include/ui/*.hpp
+)
+
+file(GLOB_RECURSE UTILS_SOURCES
+    src/utils/*.cpp
 )
 
 # Create the executable
-add_executable(${PROJECT_NAME} ${UI_SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${UTILS_SOURCES} ${UI_SOURCE_FILES})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Debug mode enabled")
