@@ -28,6 +28,9 @@ public:
     void setVisuals(bool preview = true);
     bool finalizePolygon();
 
+    bool intersects(const SmartPolygon& other) const;
+    bool merge(const SmartPolygon& other);
+
 private:
     std::optional<QPolygonF> qtPolygon;
     std::optional<poly::PolygonType> boostPolygon;

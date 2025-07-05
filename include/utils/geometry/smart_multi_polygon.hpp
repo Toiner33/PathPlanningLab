@@ -18,12 +18,12 @@ public:
 
     void addPolygon(const SmartPolygon::SharedPtr& newPolygon);
     void popPolygon();
-    void clear();    
+    void clear();
+    
+    bool mergeOverlapping();
 private:
     std::shared_ptr<GraphicsScene> parentScene;
     std::vector<SmartPolygon::SharedPtr> smartPolygons;
-
-    bool performMerge();
 };
 
 }; // namespace geometry

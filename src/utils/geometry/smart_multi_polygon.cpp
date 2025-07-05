@@ -21,10 +21,33 @@ void SmartMultiPolygon::popPolygon(){
 }
 void SmartMultiPolygon::clear(){
     while (!smartPolygons.empty()) { popPolygon(); }
-}  
+}
 
-bool SmartMultiPolygon::performMerge(){
+bool SmartMultiPolygon::mergeOverlapping() {
+    auto getIntersectingPolygonIt = [
+        &smartPolygons = smartPolygons
+    ](){
+        return std::find_if(
+            std::next(smartPolygons.rbegin()),
+            smartPolygons.rend(),
+            [&lastPolygon = smartPolygons.back()](
+                const SmartPolygon::SharedPtr& polygon
+            ) {
+                return polygon->intersects(*lastPolygon);
+            }
+        );
+    };
+    
+    auto intersectingPolygonIt = getIntersectingPolygonIt();
+    bool mergedPolygons = intersectingPolygonIt != smartPolygons.rend();
 
+    while (intersectingPolygonIt != smartPolygons.rend()) {
+        intersectingPolygonIt->get()->merge(*smartPolygons.back());
+        popPolygon();
+        intersectingPolygonIt = getIntersectingPolygonIt();
+    }
+
+    return mergedPolygons;
 }
 
 }; // namespace geometry

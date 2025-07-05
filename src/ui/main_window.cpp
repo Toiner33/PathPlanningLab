@@ -50,6 +50,8 @@ void MainWindow::onDoubleClick(QPointF point) {
         drivablePolygon.popPolygon();
     }
 
+    drivablePolygon.mergeOverlapping();
+
     currentPolygon.reset();
     scene->setDrawingEnabled(false);
 }

@@ -91,8 +91,24 @@ bool SmartPolygon::finalizePolygon() {
     
     setVisuals(false);
     this->setPolygon(qtPolygon.value());
-    qtPolygon = std::nullopt;
-    boostPolygon = std::nullopt;
+    return true;
+}
+
+bool SmartPolygon::intersects(const SmartPolygon& other) const {
+    return boost::geometry::intersects(boostPolygon.value(), other.boostPolygon.value());
+}
+
+bool SmartPolygon::merge(const SmartPolygon& other) {
+    poly::MultiPolygonType mergedPolygons;
+    boost::geometry::union_(boostPolygon.value(), other.boostPolygon.value(), mergedPolygons);
+    if (mergedPolygons.size() > 1) {
+        QMessageBox::warning(nullptr, "Smart Polygon", "Cannot merge not overlapping polygons!");
+        return false;
+    }
+
+    setVisuals(false);
+    boostPolygon = mergedPolygons.front();
+    this->setPolygon(poly::toQPolygonF(boostPolygon.value()));
     return true;
 }
 
