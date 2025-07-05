@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QPolygonF>
+#include <QPainterPath>
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
@@ -31,6 +32,23 @@ inline static QPolygonF toQPolygonF(const PolygonType& polygon) {
         qPolygon.append(QPointF(point.x(), point.y()));
     }
     return qPolygon;
+}
+
+inline static QPolygonF toQPolygonF(const PolygonType::ring_type& ring) {
+     QPolygonF qPolygon;
+    for (const PointType& point : ring) {
+        qPolygon.append(QPointF(point.x(), point.y()));
+    }
+    return qPolygon;   
+}
+
+inline static QPainterPath toQPainterPath(const PolygonType& polygon) {
+    QPainterPath qtPolygonWithRings;
+    qtPolygonWithRings.addPolygon(toQPolygonF(polygon.outer()));
+    for (const auto& ring : polygon.inners()) {
+        qtPolygonWithRings.addPolygon(toQPolygonF(ring));
+    }
+    return qtPolygonWithRings;
 }
 
 inline static PolygonType toBoostPolygon(const QPolygonF& qPolygon) {

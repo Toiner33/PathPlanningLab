@@ -3,7 +3,8 @@
 #include <optional>
 #include <memory>
 
-#include <QGraphicsItem>
+#include <QGraphicsPathItem>
+#include <QPainterPath>
 #include <QVector>
 #include <QPoint>
 
@@ -13,7 +14,7 @@
 namespace utils {
 namespace geometry {
 
-class SmartPolygon : public QGraphicsPolygonItem {
+class SmartPolygon : public QGraphicsPathItem {
 public:
     using SharedPtr = std::shared_ptr<SmartPolygon>;
     using UniquePtr = std::unique_ptr<SmartPolygon>;
@@ -32,9 +33,11 @@ public:
     bool merge(const SmartPolygon& other);
 
 private:
-    std::optional<QPolygonF> qtPolygon;
-    std::optional<poly::PolygonType> boostPolygon;
+    QPainterPath qtPolygonWithRings;
     visuals::PolygonDesign visualDesign;
+
+    std::optional<QPolygonF> qtPolygonPreview;
+    std::optional<poly::PolygonType> boostPolygon;
 };
 
 };  // namespace geometry

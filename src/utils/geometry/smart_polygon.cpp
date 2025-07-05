@@ -13,24 +13,25 @@ namespace utils {
 namespace geometry {
 
 SmartPolygon::SmartPolygon(const visuals::PolygonDesign& polygonDesign): 
-    QGraphicsPolygonItem(),
+    QGraphicsPathItem(),
     visualDesign(polygonDesign) {
         setVisuals(true);
+        qtPolygonWithRings.setFillRule(Qt::OddEvenFill);
     };
 
 SmartPolygon::SmartPolygon(
     const poly::PolygonType& newPolygon,
     const visuals::PolygonDesign& polygonDesign)
-: visualDesign(polygonDesign) {
+: SmartPolygon(polygonDesign) {
     boostPolygon = newPolygon;
     poly::FailureType correctionResult = poly::correctAndCheck(boostPolygon.value());
     if (correctionResult == poly::FailureType::no_failure) {
         setVisuals(false);
-        qtPolygon = poly::toQPolygonF(boostPolygon.value());
-        this->setPolygon(qtPolygon.value());
+        qtPolygonWithRings = poly::toQPainterPath(boostPolygon.value());
+        this->setPath(qtPolygonWithRings);
     } else {
         boostPolygon = std::nullopt;
-        qtPolygon = std::nullopt;
+        qtPolygonPreview = std::nullopt;
         std::cout << "[ERROR] Creating new SmartPolygon: " << 
             boost::geometry::validity_failure_type_message(correctionResult) << std::endl;
     }
@@ -39,42 +40,48 @@ SmartPolygon::SmartPolygon(
 SmartPolygon::SmartPolygon(
     const QPolygonF& newPolygon,
     const visuals::PolygonDesign& polygonDesign
-): visualDesign(polygonDesign) {
+): SmartPolygon(polygonDesign) {
     boostPolygon = poly::toBoostPolygon(newPolygon);
     poly::FailureType correctionResult = poly::correctAndCheck(boostPolygon.value());
     if (correctionResult == poly::FailureType::no_failure) {
         setVisuals(false);
-        qtPolygon = newPolygon;
-        this->setPolygon(qtPolygon.value());
+        qtPolygonWithRings = poly::toQPainterPath(boostPolygon.value());
+        this->setPath(qtPolygonWithRings);
     } else {
         boostPolygon = std::nullopt;
-        qtPolygon = std::nullopt;
+        qtPolygonPreview = std::nullopt;
         std::cout << "[ERROR] Creating new SmartPolygon: " << 
             boost::geometry::validity_failure_type_message(correctionResult) << std::endl;
     }
 };
 
 void SmartPolygon::addPoint(const QPointF& newPoint) {
-    if (!boostPolygon || !qtPolygon) { 
+    if (!boostPolygon || !qtPolygonPreview) {
         boostPolygon = poly::PolygonType();
-        qtPolygon = QPolygonF();
+        qtPolygonPreview = QPolygonF();
         setVisuals(); 
     }
 
-    qtPolygon->append(newPoint);
+    QPainterPath previewPolygonPath = QPainterPath();
+    qtPolygonPreview->append(newPoint);
     boostPolygon->outer().emplace_back(newPoint.x(), newPoint.y());
-    this->setPolygon(qtPolygon.value());
+    previewPolygonPath.addPolygon(qtPolygonPreview.value());
+    previewPolygonPath.closeSubpath();
+    this->setPath(previewPolygonPath);
 }
 
 void SmartPolygon::setPreview(const QPointF& simPoint) {
-    if (!qtPolygon) { return; }
-    qtPolygon->append(simPoint);
-    this->setPolygon(qtPolygon.value());
-    qtPolygon->pop_back();
+    if (!qtPolygonPreview) { return; }
+    QPainterPath previewPolygonPath = QPainterPath();
+    qtPolygonPreview->append(simPoint);
+    previewPolygonPath.addPolygon(qtPolygonPreview.value());
+    previewPolygonPath.closeSubpath();
+    this->setPath(previewPolygonPath);
+    qtPolygonPreview->pop_back();
 }
 
 bool SmartPolygon::finalizePolygon() {
-    if (qtPolygon->size() < 3) {
+    if (!qtPolygonPreview || qtPolygonPreview->size() < 3) {
         QMessageBox::warning(nullptr, "Smart Polygon", "Polygon must have at least 3 points!");
         return false;
     }
@@ -88,9 +95,11 @@ bool SmartPolygon::finalizePolygon() {
         return false;
     }
 
-    
+    qtPolygonWithRings.addPath(poly::toQPainterPath(boostPolygon.value()));
+
     setVisuals(false);
-    this->setPolygon(qtPolygon.value());
+    this->setPath(qtPolygonWithRings);
+    qtPolygonPreview = std::nullopt;
     return true;
 }
 
@@ -108,7 +117,10 @@ bool SmartPolygon::merge(const SmartPolygon& other) {
 
     setVisuals(false);
     boostPolygon = mergedPolygons.front();
-    this->setPolygon(poly::toQPolygonF(boostPolygon.value()));
+    qtPolygonWithRings.clear();
+    qtPolygonWithRings.addPath(poly::toQPainterPath(boostPolygon.value()));
+    this->setPath(qtPolygonWithRings);
+    qtPolygonPreview = std::nullopt;
     return true;
 }
 
