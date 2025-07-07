@@ -3,6 +3,7 @@
 #include <memory>
 #include <optional>
 #include <vector>
+#include <unordered_map>
 
 #include <QMainWindow>
 
@@ -21,11 +22,24 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    enum class DrawingMode {
+        NONE,
+        ADD,
+        REMOVE
+    };
+
+    enum class DrawingArea {
+        NONE,
+        DRIVABLE
+    };
+
 private slots:
     void onStartDrawing();
-    void onPointClicked(QPointF point);
-    void onDoubleClick(QPointF point);
-    void onCursorMoved(QPointF point);
+    void onPointClicked(const QPointF& point);
+    void onSceneClicked(const QPointF& point);
+    void onDoubleClick(const QPointF& point);
+    void onCursorMoved(const QPointF& point);
+    void onStopDrawing();
 
 private:
     Ui::MainWindow ui;
@@ -33,4 +47,22 @@ private:
     
     utils::geometry::SmartPolygon::SharedPtr currentPolygon;
     utils::geometry::SmartMultiPolygon drivablePolygon;
+
+    DrawingMode drawingMode = DrawingMode::NONE;
+    DrawingArea drawingArea = DrawingArea::NONE;
+
+    void forceButtonState(QPushButton* button, bool state);
+
+    bool setDrawingMode(const DrawingMode& mode);
+    bool setDrawingArea(const DrawingArea& area);
+    bool isDrawing();
+
+    utils::geometry::SmartMultiPolygon* activeArea();
+
+    static inline const std::unordered_map<DrawingArea, QColor> areaColorsMap = {
+        {DrawingArea::NONE, QColor()},
+        {DrawingArea::DRIVABLE, utils::visuals::colors::drivableGreen}
+    };
+
+    static QColor getColor(const DrawingMode& mode, const DrawingArea& area);
 };

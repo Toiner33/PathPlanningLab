@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <QBrush>
 #include <QGraphicsSceneMouseEvent>
 
@@ -9,11 +11,12 @@ void GraphicsScene::setDrawingEnabled(bool enabled) {
     drawingEnabled = enabled;
 }
 
-void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
-    if (drawingEnabled && event->button() == Qt::LeftButton) {
-        emit pointClicked(event->scenePos());
+void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {    
+    if (event->button() == Qt::LeftButton) {
+        emit drawingEnabled ? 
+            pointClicked(event->scenePos()) :
+            sceneClicked(event->scenePos());
     }
-
     QGraphicsScene::mousePressEvent(event);
 }
 
@@ -21,7 +24,6 @@ void GraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) {
     if (drawingEnabled && event->button() == Qt::LeftButton) {
         emit sceneDoubleClicked(event->scenePos());
     }
-
     QGraphicsScene::mouseDoubleClickEvent(event);
 }
 
@@ -29,8 +31,14 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
     if (drawingEnabled) {
         emit cursorMoved(event->scenePos());
     }
-
     QGraphicsScene::mouseMoveEvent(event);
+}
+
+void GraphicsScene::keyPressEvent(QKeyEvent* event) {
+    if (event->key() == Qt::Key_Escape) {
+        emit stopDrawing();
+    }
+    QGraphicsScene::keyPressEvent(event);
 }
 
 // void GraphicsScene::drawGrid(int rows, int cols, int size) {

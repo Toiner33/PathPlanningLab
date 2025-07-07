@@ -27,9 +27,12 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QGridLayout *gridLayout;
-    QPushButton *runAlgorithmBt;
     QGraphicsView *graphicsView;
-    QGroupBox *groupBox;
+    QPushButton *runAlgorithmBt;
+    QGroupBox *drawingToolsBox;
+    QPushButton *eraseBt;
+    QPushButton *drawBt;
+    QGroupBox *drawingAreaBox;
     QPushButton *drivableBt;
     QMenuBar *menubar;
     QStatusBar *statusbar;
@@ -38,34 +41,55 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(839, 696);
+        MainWindow->resize(826, 696);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        runAlgorithmBt = new QPushButton(centralwidget);
-        runAlgorithmBt->setObjectName(QString::fromUtf8("runAlgorithmBt"));
-        runAlgorithmBt->setMinimumSize(QSize(113, 23));
-
-        gridLayout->addWidget(runAlgorithmBt, 0, 1, 1, 1);
-
         graphicsView = new QGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
 
-        gridLayout->addWidget(graphicsView, 0, 0, 6, 1);
+        gridLayout->addWidget(graphicsView, 0, 0, 12, 1);
 
-        groupBox = new QGroupBox(centralwidget);
-        groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        drivableBt = new QPushButton(groupBox);
+        runAlgorithmBt = new QPushButton(centralwidget);
+        runAlgorithmBt->setObjectName(QString::fromUtf8("runAlgorithmBt"));
+        runAlgorithmBt->setMinimumSize(QSize(113, 23));
+        runAlgorithmBt->setFocusPolicy(Qt::NoFocus);
+
+        gridLayout->addWidget(runAlgorithmBt, 0, 1, 1, 1);
+
+        drawingToolsBox = new QGroupBox(centralwidget);
+        drawingToolsBox->setObjectName(QString::fromUtf8("drawingToolsBox"));
+        eraseBt = new QPushButton(drawingToolsBox);
+        eraseBt->setObjectName(QString::fromUtf8("eraseBt"));
+        eraseBt->setGeometry(QRect(10, 70, 91, 31));
+        eraseBt->setFocusPolicy(Qt::NoFocus);
+        eraseBt->setCheckable(true);
+        eraseBt->setChecked(false);
+        drawBt = new QPushButton(drawingToolsBox);
+        drawBt->setObjectName(QString::fromUtf8("drawBt"));
+        drawBt->setGeometry(QRect(10, 30, 91, 31));
+        drawBt->setFocusPolicy(Qt::NoFocus);
+        drawBt->setCheckable(true);
+        drawBt->setChecked(false);
+
+        gridLayout->addWidget(drawingToolsBox, 1, 1, 2, 1);
+
+        drawingAreaBox = new QGroupBox(centralwidget);
+        drawingAreaBox->setObjectName(QString::fromUtf8("drawingAreaBox"));
+        drivableBt = new QPushButton(drawingAreaBox);
         drivableBt->setObjectName(QString::fromUtf8("drivableBt"));
-        drivableBt->setGeometry(QRect(10, 30, 93, 23));
+        drivableBt->setGeometry(QRect(10, 30, 91, 31));
+        drivableBt->setFocusPolicy(Qt::NoFocus);
+        drivableBt->setCheckable(true);
+        drivableBt->setChecked(false);
 
-        gridLayout->addWidget(groupBox, 1, 1, 2, 1);
+        gridLayout->addWidget(drawingAreaBox, 3, 1, 4, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 839, 20));
+        menubar->setGeometry(QRect(0, 0, 826, 20));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -80,7 +104,10 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         runAlgorithmBt->setText(QCoreApplication::translate("MainWindow", "Run algorithm", nullptr));
-        groupBox->setTitle(QCoreApplication::translate("MainWindow", "Drawing Tools", nullptr));
+        drawingToolsBox->setTitle(QCoreApplication::translate("MainWindow", "Drawing Tools", nullptr));
+        eraseBt->setText(QCoreApplication::translate("MainWindow", "Erase", nullptr));
+        drawBt->setText(QCoreApplication::translate("MainWindow", "Draw", nullptr));
+        drawingAreaBox->setTitle(QCoreApplication::translate("MainWindow", "Drawing Area", nullptr));
         drivableBt->setText(QCoreApplication::translate("MainWindow", "Drivable", nullptr));
     } // retranslateUi
 

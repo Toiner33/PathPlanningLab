@@ -16,6 +16,8 @@ public:
     SmartMultiPolygon(const std::shared_ptr<GraphicsScene>& scene);
     ~SmartMultiPolygon();
 
+    const SmartPolygon::ConstSharedPtr back() const { return smartPolygons.back(); }
+    
     void addPolygon(const SmartPolygon::SharedPtr& newPolygon);
     void popPolygon();
     void clear();
