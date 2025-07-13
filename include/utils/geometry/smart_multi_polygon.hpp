@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <vector>
+#include <list>
 
 #include "ui/graphics_scene.hpp"
 
@@ -19,13 +19,15 @@ public:
     const SmartPolygon::ConstSharedPtr back() const { return smartPolygons.back(); }
     
     void addPolygon(const SmartPolygon::SharedPtr& newPolygon);
+    void addPolygon(SmartPolygon::SharedPtr&& newPolygon);
     void popPolygon();
     void clear();
     
     bool mergeOverlapping();
+    bool eraseOverlapping(const SmartPolygon& eraserPolygon);
 private:
     std::shared_ptr<GraphicsScene> parentScene;
-    std::vector<SmartPolygon::SharedPtr> smartPolygons;
+    std::list<SmartPolygon::SharedPtr> smartPolygons;
 };
 
 }; // namespace geometry

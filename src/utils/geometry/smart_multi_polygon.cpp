@@ -1,3 +1,6 @@
+#include <iostream>
+#include <iterator>
+
 #include "utils/geometry/smart_multi_polygon.hpp"
 
 namespace utils {
@@ -15,6 +18,12 @@ void SmartMultiPolygon::addPolygon(const SmartPolygon::SharedPtr& newPolygon){
     smartPolygons.push_back(newPolygon);
     parentScene->addItem(newPolygon.get());
 }
+
+void SmartMultiPolygon::addPolygon(SmartPolygon::SharedPtr&& newPolygon) {
+    smartPolygons.push_back(std::move(newPolygon));
+    parentScene->addItem(smartPolygons.back().get()); 
+}
+
 void SmartMultiPolygon::popPolygon(){
     parentScene->removeItem(smartPolygons.back().get());
     smartPolygons.pop_back();
@@ -48,6 +57,37 @@ bool SmartMultiPolygon::mergeOverlapping() {
     }
 
     return mergedPolygons;
+}
+
+bool SmartMultiPolygon::eraseOverlapping(const SmartPolygon& eraserPolygon) {
+    auto lastSmartPolygonIt = smartPolygons.end();
+    auto smartPolygonIt = smartPolygons.begin();
+    bool erasedPolygon = false;
+
+    while (smartPolygonIt != lastSmartPolygonIt) {
+        if (!smartPolygonIt->get()->intersects(eraserPolygon)) {
+            ++smartPolygonIt;
+            continue;
+        }
+
+        erasedPolygon = true;
+
+        std::vector<utils::geometry::SmartPolygon::SharedPtr> splittedPolygons =
+            smartPolygonIt->get()->eraseAndSplit(eraserPolygon);
+
+        if (smartPolygonIt->get()->isEmpty()) {
+            parentScene->removeItem(smartPolygonIt->get());
+            smartPolygonIt = smartPolygons.erase(smartPolygonIt);
+            continue;
+        }
+
+        for (utils::geometry::SmartPolygon::SharedPtr& polygon : splittedPolygons) {
+            addPolygon(std::move(polygon));
+        }
+
+        ++smartPolygonIt;
+    }
+    return erasedPolygon;
 }
 
 }; // namespace geometry

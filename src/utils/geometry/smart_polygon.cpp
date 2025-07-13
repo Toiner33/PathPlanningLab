@@ -124,6 +124,41 @@ bool SmartPolygon::merge(const SmartPolygon& other) {
     return true;
 }
 
+bool SmartPolygon::isEmpty() const {
+    return boostPolygon == std::nullopt;
+}
+
+std::vector<SmartPolygon::SharedPtr> SmartPolygon::eraseAndSplit(const SmartPolygon& other) {
+    std::vector<poly::PolygonType> differenceResult;
+    std::vector<SmartPolygon::SharedPtr> splittedPolygons;
+    boost::geometry::difference(
+        boostPolygon.value(), other.boostPolygon.value(), differenceResult);
+
+    if (differenceResult.empty()) {
+        qtPolygonWithRings.clear();
+        this->setPath(qtPolygonWithRings);
+        boostPolygon = std::nullopt;
+        qtPolygonPreview = std::nullopt;
+        std::cout << "The whole polygon was removed!" << std::endl;
+        return splittedPolygons;
+    }
+
+    boostPolygon = differenceResult.back();
+    qtPolygonWithRings.clear();
+    qtPolygonWithRings.addPath(poly::toQPainterPath(boostPolygon.value()));
+    this->setPath(qtPolygonWithRings);
+    differenceResult.pop_back();
+
+    if (differenceResult.empty()) { return splittedPolygons; }
+
+    for (const poly::PolygonType& polygon : differenceResult) {
+        splittedPolygons.emplace_back(
+            std::make_shared<SmartPolygon>(polygon, visualDesign));
+    }
+
+    return splittedPolygons;
+}
+
 void SmartPolygon::setDesign(const visuals::PolygonDesign& newDesign) {
     visualDesign = newDesign;
     setVisuals();
@@ -132,6 +167,17 @@ void SmartPolygon::setDesign(const visuals::PolygonDesign& newDesign) {
 void SmartPolygon::setVisuals(bool preview) {
     this->setBrush(visualDesign.getBrush(preview));
     this->setPen(visualDesign.getPen(preview));
+}
+
+template <typename T>
+T SmartPolygon::getCentroid() const {
+    if (isEmpty()) {
+        return {0.0, 0.0};
+    }
+
+    poly::PointType centroid;
+    boost::geometry::centroid(boostPolygon.value(), centroid);
+    return {centroid.x(), centroid.y()};
 }
 
 };  // namespace geometry

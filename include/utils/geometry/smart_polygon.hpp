@@ -4,9 +4,11 @@
 #include <memory>
 
 #include <QGraphicsPathItem>
+#include <QGraphicsTextItem>
 #include <QPainterPath>
 #include <QVector>
 #include <QPoint>
+#include <QFont>
 
 #include "utils/geometry/poly.hpp"
 #include "utils/visuals/polygon_design.hpp"
@@ -24,6 +26,11 @@ public:
     SmartPolygon(const poly::PolygonType& newPolygon, const visuals::PolygonDesign& polygonDesign);
     SmartPolygon(const QPolygonF& newPolygon, const visuals::PolygonDesign& polygonDesign);
 
+    bool isEmpty() const;
+    
+    template <typename T>
+    T getCentroid() const;
+
     void addPoint(const QPointF& newPoint);
     void setPreview(const QPointF& simPoint);
     void setDesign(const visuals::PolygonDesign& newDesign);
@@ -32,6 +39,7 @@ public:
 
     bool intersects(const SmartPolygon& other) const;
     bool merge(const SmartPolygon& other);
+    std::vector<SmartPolygon::SharedPtr> eraseAndSplit(const SmartPolygon& other);
 
 private:
     QPainterPath qtPolygonWithRings;

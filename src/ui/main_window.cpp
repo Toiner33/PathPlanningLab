@@ -158,8 +158,7 @@ void MainWindow::onDoubleClick(const QPointF& point) {
     }
 
     if (drawingMode == DrawingMode::REMOVE) {
-        // TODO(adri): make difference with active area and remove
-        QMessageBox::information(nullptr, "Debug ...", "Removing polygon!");
+        activeArea()->eraseOverlapping(*currentPolygon);
     } else {
         activeArea()->mergeOverlapping();
     }
