@@ -48,24 +48,28 @@ private:
     utils::geometry::SmartPolygon::SharedPtr currentPolygon;
     utils::geometry::SmartMultiPolygon drivablePolygon;
 
+    QPushButton* currentToolButton = nullptr;
+    QPushButton* currentAreaButton = nullptr;
+    void forceButtonState(QPushButton* button, bool state);
+    bool setDrawingMode(const DrawingMode& mode);
+    void tryDrawingModeBt(bool checked, const DrawingMode& mode, QPushButton* button);
+    bool setDrawingArea(const DrawingArea& area);
+    void tryDrawingAreaBt(bool checked, const DrawingArea& area, QPushButton* button);
+    bool isDrawing();
+
     DrawingMode drawingMode = DrawingMode::NONE;
     DrawingArea drawingArea = DrawingArea::NONE;
-
-    void forceButtonState(QPushButton* button, bool state);
-
-    bool setDrawingMode(const DrawingMode& mode);
-    bool setDrawingArea(const DrawingArea& area);
-    bool isDrawing();
 
     utils::geometry::SmartMultiPolygon* activeArea();
     void addCurrent();
     void removeCurrent();
     void applyCurrent();
+    void clearAllPolygons();
+
+    static QColor getColor(const DrawingMode& mode, const DrawingArea& area);
 
     static inline const std::unordered_map<DrawingArea, QColor> areaColorsMap = {
         {DrawingArea::NONE, QColor()},
         {DrawingArea::DRIVABLE, utils::visuals::colors::drivableGreen}
     };
-
-    static QColor getColor(const DrawingMode& mode, const DrawingArea& area);
 };

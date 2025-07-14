@@ -13,42 +13,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui.setupUi(this);
     ui.graphicsView->setScene(scene.get());
 
-    QObject::connect(ui.runAlgorithmBt, &QPushButton::clicked, this, [] {
-        QMessageBox::information(nullptr, "Path Planning", "Running algorithm!");
-    });
-
-    // Drawing Mode Box Signals
-
-    auto tryDrawingMode = [this](
-        bool checked,
-        const DrawingMode& mode,
-        QPushButton* button
-    ) {
-        if (!setDrawingMode(mode)) {
-            forceButtonState(button, !checked);
-        }
-    };
-
-    auto tryDrawingArea = [this](
-        bool checked,
-        const DrawingArea& area,
-        QPushButton* button
-    ) {
-        if (!setDrawingArea(area)) {
-            forceButtonState(button, !checked);
-        }
-    };
-
+    // Drawing buttons
+    QObject::connect(ui.stopDrawingBt, &QPushButton::clicked, this, &MainWindow::onStopDrawing);
+    QObject::connect(ui.sceneClearBt, &QPushButton::clicked, this, &MainWindow::clearAllPolygons);
+    
+    // Drawing Tools Box Signals
     QObject::connect(ui.eraseBt, &QPushButton::toggled, this,
-        [this, tryDrawingMode](bool checked){ tryDrawingMode(checked, DrawingMode::REMOVE, ui.eraseBt); }
+        [this](bool checked){ this->tryDrawingModeBt(checked, DrawingMode::REMOVE, ui.eraseBt); }
     );
     QObject::connect(ui.drawBt, &QPushButton::toggled, this,
-        [this, tryDrawingMode](bool checked){ tryDrawingMode(checked, DrawingMode::ADD, ui.drawBt); }
+        [this](bool checked){ this->tryDrawingModeBt(checked, DrawingMode::ADD, ui.drawBt); }
     );
 
-    // Drivable Area Box Signals
+    // Drawing Area Box Signals
     QObject::connect(ui.drivableBt, &QPushButton::toggled, this,
-        [this, tryDrawingArea](bool checked){ tryDrawingArea(checked, DrawingArea::DRIVABLE, ui.drivableBt); }
+        [this](bool checked){ this->tryDrawingAreaBt(checked, DrawingArea::DRIVABLE, ui.drivableBt); }
     );
 
     // Scene signals
@@ -67,7 +46,33 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() {}
 
+void MainWindow::tryDrawingModeBt(bool checked, const DrawingMode& mode, QPushButton* button) {
+    const DrawingMode& finalMode = checked ? mode : DrawingMode::NONE;
+    if (!setDrawingMode(finalMode)) {
+        forceButtonState(button, !checked); // Reject state change
+        return;
+    }
+
+    if (currentToolButton != button) {
+        forceButtonState(currentToolButton, false);
+        currentToolButton = button;
+    }
+}
+
+void MainWindow::tryDrawingAreaBt(bool checked, const DrawingArea& area, QPushButton* button) {
+    const DrawingArea& finalArea = checked ? area : DrawingArea::NONE;
+    if (!setDrawingArea(finalArea)) {
+        forceButtonState(button, !checked); // Reject state change
+    }
+
+    if (currentAreaButton != button) {
+        forceButtonState(currentAreaButton, false);
+        currentAreaButton = button;
+    }
+}
+
 void MainWindow::forceButtonState(QPushButton* button, bool state) {
+    if (!button) { return; }
     button->blockSignals(true);
     button->setChecked(state);
     button->blockSignals(false);
@@ -85,26 +90,31 @@ void MainWindow::onStopDrawing() {
     forceButtonState(ui.drawBt, false);
     forceButtonState(ui.eraseBt, false);
     forceButtonState(ui.drivableBt, false);
+    currentToolButton = nullptr;
+    currentAreaButton = nullptr;
+}
+
+void MainWindow::clearAllPolygons() {
+    onStopDrawing();
+    drivablePolygon.clear();
 }
 
 bool MainWindow::setDrawingMode(const DrawingMode& mode) {
-    if (drawingMode != DrawingMode::NONE) {
+    if (currentPolygon) {
         QMessageBox::warning(nullptr, "Drawing Settings", "Please stop drawing before changing modes");
         return false;
     }
 
     drawingMode = mode;
-
     return true;
 }
 bool MainWindow::setDrawingArea(const DrawingArea& area) {
-    if (drawingArea != DrawingArea::NONE) {
+    if (currentPolygon) {
         QMessageBox::warning(nullptr, "Drawing Settings", "Please stop drawing before changing areas");
         return false;
     }
 
     drawingArea = area;
-
     return true;
 }
 

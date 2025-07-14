@@ -28,7 +28,8 @@ public:
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QGraphicsView *graphicsView;
-    QPushButton *runAlgorithmBt;
+    QPushButton *sceneClearBt;
+    QPushButton *stopDrawingBt;
     QGroupBox *drawingToolsBox;
     QPushButton *eraseBt;
     QPushButton *drawBt;
@@ -42,6 +43,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(826, 696);
+        MainWindow->setTabShape(QTabWidget::Rounded);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
@@ -49,14 +51,19 @@ public:
         graphicsView = new QGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
 
-        gridLayout->addWidget(graphicsView, 0, 0, 12, 1);
+        gridLayout->addWidget(graphicsView, 0, 0, 14, 1);
 
-        runAlgorithmBt = new QPushButton(centralwidget);
-        runAlgorithmBt->setObjectName(QString::fromUtf8("runAlgorithmBt"));
-        runAlgorithmBt->setMinimumSize(QSize(113, 23));
-        runAlgorithmBt->setFocusPolicy(Qt::NoFocus);
+        sceneClearBt = new QPushButton(centralwidget);
+        sceneClearBt->setObjectName(QString::fromUtf8("sceneClearBt"));
+        sceneClearBt->setFocusPolicy(Qt::NoFocus);
 
-        gridLayout->addWidget(runAlgorithmBt, 0, 1, 1, 1);
+        gridLayout->addWidget(sceneClearBt, 0, 1, 1, 1);
+
+        stopDrawingBt = new QPushButton(centralwidget);
+        stopDrawingBt->setObjectName(QString::fromUtf8("stopDrawingBt"));
+        stopDrawingBt->setFocusPolicy(Qt::NoFocus);
+
+        gridLayout->addWidget(stopDrawingBt, 1, 1, 1, 1);
 
         drawingToolsBox = new QGroupBox(centralwidget);
         drawingToolsBox->setObjectName(QString::fromUtf8("drawingToolsBox"));
@@ -73,7 +80,7 @@ public:
         drawBt->setCheckable(true);
         drawBt->setChecked(false);
 
-        gridLayout->addWidget(drawingToolsBox, 1, 1, 2, 1);
+        gridLayout->addWidget(drawingToolsBox, 2, 1, 3, 1);
 
         drawingAreaBox = new QGroupBox(centralwidget);
         drawingAreaBox->setObjectName(QString::fromUtf8("drawingAreaBox"));
@@ -84,7 +91,7 @@ public:
         drivableBt->setCheckable(true);
         drivableBt->setChecked(false);
 
-        gridLayout->addWidget(drawingAreaBox, 3, 1, 4, 1);
+        gridLayout->addWidget(drawingAreaBox, 5, 1, 2, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -103,7 +110,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        runAlgorithmBt->setText(QCoreApplication::translate("MainWindow", "Run algorithm", nullptr));
+        sceneClearBt->setText(QCoreApplication::translate("MainWindow", "Clear", nullptr));
+        stopDrawingBt->setText(QCoreApplication::translate("MainWindow", "StopDrawing", nullptr));
         drawingToolsBox->setTitle(QCoreApplication::translate("MainWindow", "Drawing Tools", nullptr));
         eraseBt->setText(QCoreApplication::translate("MainWindow", "Erase", nullptr));
         drawBt->setText(QCoreApplication::translate("MainWindow", "Draw", nullptr));

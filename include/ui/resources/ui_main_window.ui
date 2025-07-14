@@ -13,28 +13,35 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" rowspan="12">
+    <item row="0" column="0" rowspan="14">
      <widget class="QGraphicsView" name="graphicsView"/>
     </item>
     <item row="0" column="1">
-     <widget class="QPushButton" name="runAlgorithmBt">
-      <property name="minimumSize">
-       <size>
-        <width>113</width>
-        <height>23</height>
-       </size>
-      </property>
+     <widget class="QPushButton" name="sceneClearBt">
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
-       <string>Run algorithm</string>
+       <string>Clear</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1" rowspan="2">
+    <item row="1" column="1">
+     <widget class="QPushButton" name="stopDrawingBt">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>StopDrawing</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1" rowspan="3">
      <widget class="QGroupBox" name="drawingToolsBox">
       <property name="title">
        <string>Drawing Tools</string>
@@ -85,7 +92,7 @@
       </widget>
      </widget>
     </item>
-    <item row="3" column="1" rowspan="4">
+    <item row="5" column="1" rowspan="2">
      <widget class="QGroupBox" name="drawingAreaBox">
       <property name="title">
        <string>Drawing Area</string>
