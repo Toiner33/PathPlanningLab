@@ -128,17 +128,7 @@ void MainWindow::onStartDrawing() {
         return;
     }
 
-    if (!currentPolygon) {
-        currentPolygon = 
-            std::make_shared<utils::geometry::SmartPolygon>(getColor(drawingMode, drawingArea));
-    }
-
-    if (drawingMode == DrawingMode::ADD) {
-        activeArea()->addPolygon(currentPolygon);
-    } else if (drawingMode == DrawingMode::REMOVE) {
-        scene->addItem(currentPolygon.get());
-    }
-
+    addCurrent();
     scene->setDrawingEnabled(true);
 }
 
@@ -150,18 +140,10 @@ void MainWindow::onDoubleClick(const QPointF& point) {
     currentPolygon->addPoint(point);
 
     if (!currentPolygon->finalizePolygon()) {
-        if (drawingMode == DrawingMode::REMOVE) {
-            scene->removeItem(currentPolygon.get());
-        } else {
-            activeArea()->popPolygon();
-        }
+        removeCurrent();
     }
 
-    if (drawingMode == DrawingMode::REMOVE) {
-        activeArea()->eraseOverlapping(*currentPolygon);
-    } else {
-        activeArea()->mergeOverlapping();
-    }
+    applyCurrent();
 
     currentPolygon.reset();
     scene->setDrawingEnabled(false);
@@ -183,6 +165,54 @@ utils::geometry::SmartMultiPolygon* MainWindow::activeArea() {
             return nullptr;
     }
 }
+
+void MainWindow::addCurrent() {
+    if (!currentPolygon) {
+        currentPolygon = 
+            std::make_shared<utils::geometry::SmartPolygon>(getColor(drawingMode, drawingArea));
+    }
+    
+    switch (drawingMode) {
+        case DrawingMode::ADD:
+            activeArea()->addPolygon(currentPolygon);
+            break;
+        case DrawingMode::REMOVE:
+            scene->addItem(currentPolygon.get());
+            break;
+        default:
+            std::cout << "Unknown drawing mode while adding current polygon. " << std::endl;
+            break;
+    }
+}
+
+void MainWindow::removeCurrent() {
+    switch (drawingMode) {
+        case DrawingMode::ADD:
+            activeArea()->popPolygon();
+            break;
+        case DrawingMode::REMOVE:
+            scene->removeItem(currentPolygon.get());
+            break;
+        default:
+            std::cout << "Unknown drawing mode removing current polygon. " << std::endl;
+            break;
+    }
+}
+
+void MainWindow::applyCurrent() {
+    switch (drawingMode) {
+        case DrawingMode::ADD:
+            activeArea()->mergeOverlapping();
+            break;
+        case DrawingMode::REMOVE:
+            activeArea()->eraseOverlapping(*currentPolygon);
+            break;
+        default:
+            std::cout << "Unknown drawing mode while applying current polygon. " << std::endl;
+            break;
+    }
+}
+
 
 QColor MainWindow::getColor(
     const DrawingMode& mode,

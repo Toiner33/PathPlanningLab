@@ -58,6 +58,9 @@ private:
     bool isDrawing();
 
     utils::geometry::SmartMultiPolygon* activeArea();
+    void addCurrent();
+    void removeCurrent();
+    void applyCurrent();
 
     static inline const std::unordered_map<DrawingArea, QColor> areaColorsMap = {
         {DrawingArea::NONE, QColor()},
