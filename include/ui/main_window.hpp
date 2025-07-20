@@ -40,6 +40,7 @@ private slots:
     void onDoubleClick(const QPointF& point);
     void onCursorMoved(const QPointF& point);
     void onStopDrawing();
+    void onZoomInOut(double factor);
 
 private:
     Ui::MainWindow ui;
@@ -56,6 +57,8 @@ private:
     bool setDrawingArea(const DrawingArea& area);
     void tryDrawingAreaBt(bool checked, const DrawingArea& area, QPushButton* button);
     bool isDrawing();
+
+    void setCorrectInteractionMode();
 
     DrawingMode drawingMode = DrawingMode::NONE;
     DrawingArea drawingArea = DrawingArea::NONE;

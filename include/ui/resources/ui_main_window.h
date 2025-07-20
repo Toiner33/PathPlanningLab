@@ -50,6 +50,9 @@ public:
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         graphicsView = new QGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
+        graphicsView->setMouseTracking(true);
+        graphicsView->setRenderHints(QPainter::Antialiasing);
+        graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
 
         gridLayout->addWidget(graphicsView, 0, 0, 14, 1);
 

@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     drivablePolygon(scene)
 {
     ui.setupUi(this);
+    scene->setSceneRect(-5000, -5000, 10000, 10000);
     ui.graphicsView->setScene(scene.get());
 
     // Drawing buttons
@@ -36,15 +37,16 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(scene.get(), &GraphicsScene::sceneDoubleClicked, this, &MainWindow::onDoubleClick);
     QObject::connect(scene.get(), &GraphicsScene::cursorMoved, this, &MainWindow::onCursorMoved);
     QObject::connect(scene.get(), &GraphicsScene::stopDrawing, this, &MainWindow::onStopDrawing);
-
-    ui.graphicsView->setRenderHint(QPainter::Antialiasing);
-    ui.graphicsView->setMouseTracking(true);
-    scene->setSceneRect(0, 0, 500, 500);
+    QObject::connect(scene.get(), &GraphicsScene::zoomInOut, this, &MainWindow::onZoomInOut);
 
     // scene->drawGrid(25, 25, 20);
 }
 
 MainWindow::~MainWindow() {}
+
+void MainWindow::onZoomInOut(double factor) { 
+    ui.graphicsView->scale(factor, factor);
+}
 
 void MainWindow::tryDrawingModeBt(bool checked, const DrawingMode& mode, QPushButton* button) {
     const DrawingMode& finalMode = checked ? mode : DrawingMode::NONE;
@@ -57,6 +59,8 @@ void MainWindow::tryDrawingModeBt(bool checked, const DrawingMode& mode, QPushBu
         forceButtonState(currentToolButton, false);
         currentToolButton = button;
     }
+
+    setCorrectInteractionMode();
 }
 
 void MainWindow::tryDrawingAreaBt(bool checked, const DrawingArea& area, QPushButton* button) {
@@ -69,6 +73,8 @@ void MainWindow::tryDrawingAreaBt(bool checked, const DrawingArea& area, QPushBu
         forceButtonState(currentAreaButton, false);
         currentAreaButton = button;
     }
+
+    setCorrectInteractionMode();
 }
 
 void MainWindow::forceButtonState(QPushButton* button, bool state) {
@@ -92,6 +98,17 @@ void MainWindow::onStopDrawing() {
     forceButtonState(ui.drivableBt, false);
     currentToolButton = nullptr;
     currentAreaButton = nullptr;
+    setCorrectInteractionMode();
+}
+
+void MainWindow::setCorrectInteractionMode() {
+    if (isDrawing()) {
+        ui.graphicsView->setCursor(Qt::CrossCursor);
+        ui.graphicsView->setDragMode(QGraphicsView::NoDrag);
+    } else {
+        ui.graphicsView->setCursor(Qt::SizeAllCursor);
+        ui.graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+    }
 }
 
 void MainWindow::clearAllPolygons() {
@@ -124,7 +141,6 @@ bool MainWindow::isDrawing(){
 
 void MainWindow::onSceneClicked(const QPointF& scenePos) {
     if (!isDrawing()) {
-        QMessageBox::warning(nullptr, "Drawing Settings", "Please select drawing tool and area first!");
         return;
     }
 
