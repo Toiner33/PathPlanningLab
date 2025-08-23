@@ -10,14 +10,12 @@
 #define UI_MAIN_WINDOW_H
 
 #include <QtCore/QVariant>
+#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGridLayout>
-#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -25,25 +23,61 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
+    QAction *actionDraw;
+    QAction *actionErase;
+    QAction *actionTools;
+    QAction *actionAreas;
+    QAction *actionDrivable;
+    QAction *actionActions;
+    QAction *actionClear;
+    QAction *actionStop;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QGraphicsView *graphicsView;
-    QPushButton *sceneClearBt;
-    QPushButton *stopDrawingBt;
-    QGroupBox *drawingToolsBox;
-    QPushButton *eraseBt;
-    QPushButton *drawBt;
-    QGroupBox *drawingAreaBox;
-    QPushButton *drivableBt;
-    QMenuBar *menubar;
-    QStatusBar *statusbar;
+    QToolBar *toolBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(826, 696);
+        MainWindow->resize(858, 713);
         MainWindow->setTabShape(QTabWidget::Rounded);
+        actionDraw = new QAction(MainWindow);
+        actionDraw->setObjectName(QString::fromUtf8("actionDraw"));
+        actionDraw->setCheckable(true);
+        actionDraw->setChecked(false);
+        actionErase = new QAction(MainWindow);
+        actionErase->setObjectName(QString::fromUtf8("actionErase"));
+        actionErase->setCheckable(true);
+        actionErase->setChecked(false);
+        actionTools = new QAction(MainWindow);
+        actionTools->setObjectName(QString::fromUtf8("actionTools"));
+        actionTools->setEnabled(false);
+        QFont font;
+        font.setPointSize(10);
+        font.setBold(true);
+        font.setWeight(75);
+        font.setKerning(true);
+        actionTools->setFont(font);
+        actionAreas = new QAction(MainWindow);
+        actionAreas->setObjectName(QString::fromUtf8("actionAreas"));
+        actionAreas->setEnabled(false);
+        QFont font1;
+        font1.setPointSize(10);
+        font1.setBold(true);
+        font1.setWeight(75);
+        actionAreas->setFont(font1);
+        actionDrivable = new QAction(MainWindow);
+        actionDrivable->setObjectName(QString::fromUtf8("actionDrivable"));
+        actionDrivable->setCheckable(true);
+        actionActions = new QAction(MainWindow);
+        actionActions->setObjectName(QString::fromUtf8("actionActions"));
+        actionActions->setEnabled(false);
+        actionActions->setFont(font1);
+        actionClear = new QAction(MainWindow);
+        actionClear->setObjectName(QString::fromUtf8("actionClear"));
+        actionStop = new QAction(MainWindow);
+        actionStop->setObjectName(QString::fromUtf8("actionStop"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
@@ -54,56 +88,32 @@ public:
         graphicsView->setRenderHints(QPainter::Antialiasing);
         graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
 
-        gridLayout->addWidget(graphicsView, 0, 0, 14, 1);
-
-        sceneClearBt = new QPushButton(centralwidget);
-        sceneClearBt->setObjectName(QString::fromUtf8("sceneClearBt"));
-        sceneClearBt->setFocusPolicy(Qt::NoFocus);
-
-        gridLayout->addWidget(sceneClearBt, 0, 1, 1, 1);
-
-        stopDrawingBt = new QPushButton(centralwidget);
-        stopDrawingBt->setObjectName(QString::fromUtf8("stopDrawingBt"));
-        stopDrawingBt->setFocusPolicy(Qt::NoFocus);
-
-        gridLayout->addWidget(stopDrawingBt, 1, 1, 1, 1);
-
-        drawingToolsBox = new QGroupBox(centralwidget);
-        drawingToolsBox->setObjectName(QString::fromUtf8("drawingToolsBox"));
-        eraseBt = new QPushButton(drawingToolsBox);
-        eraseBt->setObjectName(QString::fromUtf8("eraseBt"));
-        eraseBt->setGeometry(QRect(10, 70, 91, 31));
-        eraseBt->setFocusPolicy(Qt::NoFocus);
-        eraseBt->setCheckable(true);
-        eraseBt->setChecked(false);
-        drawBt = new QPushButton(drawingToolsBox);
-        drawBt->setObjectName(QString::fromUtf8("drawBt"));
-        drawBt->setGeometry(QRect(10, 30, 91, 31));
-        drawBt->setFocusPolicy(Qt::NoFocus);
-        drawBt->setCheckable(true);
-        drawBt->setChecked(false);
-
-        gridLayout->addWidget(drawingToolsBox, 2, 1, 3, 1);
-
-        drawingAreaBox = new QGroupBox(centralwidget);
-        drawingAreaBox->setObjectName(QString::fromUtf8("drawingAreaBox"));
-        drivableBt = new QPushButton(drawingAreaBox);
-        drivableBt->setObjectName(QString::fromUtf8("drivableBt"));
-        drivableBt->setGeometry(QRect(10, 30, 91, 31));
-        drivableBt->setFocusPolicy(Qt::NoFocus);
-        drivableBt->setCheckable(true);
-        drivableBt->setChecked(false);
-
-        gridLayout->addWidget(drawingAreaBox, 5, 1, 2, 1);
+        gridLayout->addWidget(graphicsView, 0, 0, 6, 1);
 
         MainWindow->setCentralWidget(centralwidget);
-        menubar = new QMenuBar(MainWindow);
-        menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 826, 20));
-        MainWindow->setMenuBar(menubar);
-        statusbar = new QStatusBar(MainWindow);
-        statusbar->setObjectName(QString::fromUtf8("statusbar"));
-        MainWindow->setStatusBar(statusbar);
+        toolBar = new QToolBar(MainWindow);
+        toolBar->setObjectName(QString::fromUtf8("toolBar"));
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(toolBar->sizePolicy().hasHeightForWidth());
+        toolBar->setSizePolicy(sizePolicy);
+        MainWindow->addToolBar(Qt::RightToolBarArea, toolBar);
+
+        toolBar->addSeparator();
+        toolBar->addAction(actionActions);
+        toolBar->addSeparator();
+        toolBar->addAction(actionClear);
+        toolBar->addAction(actionStop);
+        toolBar->addSeparator();
+        toolBar->addAction(actionTools);
+        toolBar->addSeparator();
+        toolBar->addAction(actionDraw);
+        toolBar->addAction(actionErase);
+        toolBar->addSeparator();
+        toolBar->addAction(actionAreas);
+        toolBar->addSeparator();
+        toolBar->addAction(actionDrivable);
 
         retranslateUi(MainWindow);
 
@@ -113,13 +123,39 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        sceneClearBt->setText(QCoreApplication::translate("MainWindow", "Clear", nullptr));
-        stopDrawingBt->setText(QCoreApplication::translate("MainWindow", "StopDrawing", nullptr));
-        drawingToolsBox->setTitle(QCoreApplication::translate("MainWindow", "Drawing Tools", nullptr));
-        eraseBt->setText(QCoreApplication::translate("MainWindow", "Erase", nullptr));
-        drawBt->setText(QCoreApplication::translate("MainWindow", "Draw", nullptr));
-        drawingAreaBox->setTitle(QCoreApplication::translate("MainWindow", "Drawing Area", nullptr));
-        drivableBt->setText(QCoreApplication::translate("MainWindow", "Drivable", nullptr));
+        actionDraw->setText(QCoreApplication::translate("MainWindow", "Draw", nullptr));
+#if QT_CONFIG(tooltip)
+        actionDraw->setToolTip(QCoreApplication::translate("MainWindow", "Use this tool for drawing", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionErase->setText(QCoreApplication::translate("MainWindow", "Erase", nullptr));
+#if QT_CONFIG(tooltip)
+        actionErase->setToolTip(QCoreApplication::translate("MainWindow", "Use this tool to erase", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionTools->setText(QCoreApplication::translate("MainWindow", "Tools   ", nullptr));
+#if QT_CONFIG(tooltip)
+        actionTools->setToolTip(QCoreApplication::translate("MainWindow", "This are the tool options", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionAreas->setText(QCoreApplication::translate("MainWindow", "Areas", nullptr));
+#if QT_CONFIG(tooltip)
+        actionAreas->setToolTip(QCoreApplication::translate("MainWindow", "These are the possilble areas you can draw", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionDrivable->setText(QCoreApplication::translate("MainWindow", "Drivable", nullptr));
+#if QT_CONFIG(tooltip)
+        actionDrivable->setToolTip(QCoreApplication::translate("MainWindow", "This is the most basic area where a path can be found", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionActions->setText(QCoreApplication::translate("MainWindow", "Actions", nullptr));
+#if QT_CONFIG(tooltip)
+        actionActions->setToolTip(QCoreApplication::translate("MainWindow", "Actions to interact with the whole scene", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionClear->setText(QCoreApplication::translate("MainWindow", "Clear", nullptr));
+#if QT_CONFIG(tooltip)
+        actionClear->setToolTip(QCoreApplication::translate("MainWindow", "Clear all drawings from the scene", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionStop->setText(QCoreApplication::translate("MainWindow", "Stop", nullptr));
+#if QT_CONFIG(tooltip)
+        actionStop->setToolTip(QCoreApplication::translate("MainWindow", "Stop drawing", nullptr));
+#endif // QT_CONFIG(tooltip)
+        toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 
 };

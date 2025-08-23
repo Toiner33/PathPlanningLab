@@ -15,20 +15,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui.graphicsView->setScene(scene.get());
 
     // Drawing buttons
-    QObject::connect(ui.stopDrawingBt, &QPushButton::clicked, this, &MainWindow::onStopDrawing);
-    QObject::connect(ui.sceneClearBt, &QPushButton::clicked, this, &MainWindow::clearAllPolygons);
+    QObject::connect(ui.actionStop, &QAction::triggered, this, &MainWindow::onStopDrawing);
+    QObject::connect(ui.actionClear, &QAction::triggered, this, &MainWindow::clearAllPolygons);
     
     // Drawing Tools Box Signals
-    QObject::connect(ui.eraseBt, &QPushButton::toggled, this,
-        [this](bool checked){ this->tryDrawingModeBt(checked, DrawingMode::REMOVE, ui.eraseBt); }
+    QObject::connect(ui.actionErase, &QAction::toggled, this,
+        [this](bool checked){ this->tryDrawingModeAction(checked, DrawingMode::REMOVE, ui.actionErase); }
     );
-    QObject::connect(ui.drawBt, &QPushButton::toggled, this,
-        [this](bool checked){ this->tryDrawingModeBt(checked, DrawingMode::ADD, ui.drawBt); }
+    QObject::connect(ui.actionDraw, &QAction::toggled, this,
+        [this](bool checked){ this->tryDrawingModeAction(checked, DrawingMode::ADD, ui.actionDraw); }
     );
 
     // Drawing Area Box Signals
-    QObject::connect(ui.drivableBt, &QPushButton::toggled, this,
-        [this](bool checked){ this->tryDrawingAreaBt(checked, DrawingArea::DRIVABLE, ui.drivableBt); }
+    QObject::connect(ui.actionDrivable, &QAction::toggled, this,
+        [this](bool checked){ this->tryDrawingAreaAction(checked, DrawingArea::DRIVABLE, ui.actionDrivable); }
     );
 
     // Scene signals
@@ -48,40 +48,40 @@ void MainWindow::onZoomInOut(double factor) {
     ui.graphicsView->scale(factor, factor);
 }
 
-void MainWindow::tryDrawingModeBt(bool checked, const DrawingMode& mode, QPushButton* button) {
+void MainWindow::tryDrawingModeAction(bool checked, const DrawingMode& mode, QAction* action) {
     const DrawingMode& finalMode = checked ? mode : DrawingMode::NONE;
     if (!setDrawingMode(finalMode)) {
-        forceButtonState(button, !checked); // Reject state change
+        forceActionState(action, !checked); // Reject state change
         return;
     }
 
-    if (currentToolButton != button) {
-        forceButtonState(currentToolButton, false);
-        currentToolButton = button;
+    if (currentToolAction != action) {
+        forceActionState(currentToolAction, false);
+        currentToolAction = action;
     }
 
     setCorrectInteractionMode();
 }
 
-void MainWindow::tryDrawingAreaBt(bool checked, const DrawingArea& area, QPushButton* button) {
+void MainWindow::tryDrawingAreaAction(bool checked, const DrawingArea& area, QAction* action) {
     const DrawingArea& finalArea = checked ? area : DrawingArea::NONE;
     if (!setDrawingArea(finalArea)) {
-        forceButtonState(button, !checked); // Reject state change
+        forceActionState(action, !checked); // Reject state change
     }
 
-    if (currentAreaButton != button) {
-        forceButtonState(currentAreaButton, false);
-        currentAreaButton = button;
+    if (currentAreaAction != action) {
+        forceActionState(currentAreaAction, false);
+        currentAreaAction = action;
     }
 
     setCorrectInteractionMode();
 }
 
-void MainWindow::forceButtonState(QPushButton* button, bool state) {
-    if (!button) { return; }
-    button->blockSignals(true);
-    button->setChecked(state);
-    button->blockSignals(false);
+void MainWindow::forceActionState(QAction* action, bool state) {
+    if (!action) { return; }
+    action->blockSignals(true);
+    action->setChecked(state);
+    action->blockSignals(false);
 }
 
 void MainWindow::onStopDrawing() {
@@ -93,11 +93,11 @@ void MainWindow::onStopDrawing() {
     scene->setDrawingEnabled(false);
     drawingArea = DrawingArea::NONE;
     drawingMode = DrawingMode::NONE;
-    forceButtonState(ui.drawBt, false);
-    forceButtonState(ui.eraseBt, false);
-    forceButtonState(ui.drivableBt, false);
-    currentToolButton = nullptr;
-    currentAreaButton = nullptr;
+    forceActionState(ui.actionDraw, false);
+    forceActionState(ui.actionErase, false);
+    forceActionState(ui.actionDrivable, false);
+    currentToolAction = nullptr;
+    currentAreaAction = nullptr;
     setCorrectInteractionMode();
 }
 
@@ -206,7 +206,7 @@ void MainWindow::addCurrent() {
             scene->addItem(currentPolygon.get());
             break;
         default:
-            std::cout << "Unknown drawing mode while adding current polygon. " << std::endl;
+            std::cout << "Unknown drawing mode while adding current polygon." << std::endl;
             break;
     }
 }
@@ -220,7 +220,7 @@ void MainWindow::removeCurrent() {
             scene->removeItem(currentPolygon.get());
             break;
         default:
-            std::cout << "Unknown drawing mode removing current polygon. " << std::endl;
+            std::cout << "Unknown drawing mode removing current polygon." << std::endl;
             break;
     }
 }
@@ -234,7 +234,7 @@ void MainWindow::applyCurrent() {
             activeArea()->eraseOverlapping(*currentPolygon);
             break;
         default:
-            std::cout << "Unknown drawing mode while applying current polygon. " << std::endl;
+            std::cout << "Unknown drawing mode while applying current polygon." << std::endl;
             break;
     }
 }

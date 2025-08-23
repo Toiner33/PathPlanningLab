@@ -49,13 +49,13 @@ private:
     utils::geometry::SmartPolygon::SharedPtr currentPolygon;
     utils::geometry::SmartMultiPolygon drivablePolygon;
 
-    QPushButton* currentToolButton = nullptr;
-    QPushButton* currentAreaButton = nullptr;
-    void forceButtonState(QPushButton* button, bool state);
+    QAction* currentToolAction = nullptr;
+    QAction* currentAreaAction = nullptr;
+    void forceActionState(QAction* action, bool state);
     bool setDrawingMode(const DrawingMode& mode);
-    void tryDrawingModeBt(bool checked, const DrawingMode& mode, QPushButton* button);
+    void tryDrawingModeAction(bool checked, const DrawingMode& mode, QAction* action);
     bool setDrawingArea(const DrawingArea& area);
-    void tryDrawingAreaBt(bool checked, const DrawingArea& area, QPushButton* button);
+    void tryDrawingAreaAction(bool checked, const DrawingArea& area, QAction* action);
     bool isDrawing();
 
     void setCorrectInteractionMode();
