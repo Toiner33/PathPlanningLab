@@ -14,11 +14,25 @@ MainWindow::MainWindow(QWidget *parent)
     scene->setSceneRect(-5000, -5000, 10000, 10000);
     ui.graphicsView->setScene(scene.get());
 
-    // Drawing buttons
+    drawingToolsGroup = std::make_unique<QActionGroup>(this);
+    drawingToolsGroup->setExclusive(true);
+    drawingToolsGroup->addAction(ui.actionNoTool);
+    drawingToolsGroup->addAction(ui.actionDraw);
+    drawingToolsGroup->addAction(ui.actionErase);
+
+    drawingAreasGroup = std::make_unique<QActionGroup>(this);
+    drawingAreasGroup->setExclusive(true);
+    drawingAreasGroup->addAction(ui.actionNoArea);
+    drawingAreasGroup->addAction(ui.actionDrivable);
+
+    // Drawing actions
     QObject::connect(ui.actionStop, &QAction::triggered, this, &MainWindow::onStopDrawing);
     QObject::connect(ui.actionClear, &QAction::triggered, this, &MainWindow::clearAllPolygons);
     
-    // Drawing Tools Box Signals
+    // Drawing tool actions
+    QObject::connect(ui.actionNoTool, &QAction::toggled, this,
+        [this](bool checked){ this->tryDrawingModeAction(checked, DrawingMode::NONE, ui.actionNoTool); }
+    );
     QObject::connect(ui.actionErase, &QAction::toggled, this,
         [this](bool checked){ this->tryDrawingModeAction(checked, DrawingMode::REMOVE, ui.actionErase); }
     );
@@ -26,7 +40,10 @@ MainWindow::MainWindow(QWidget *parent)
         [this](bool checked){ this->tryDrawingModeAction(checked, DrawingMode::ADD, ui.actionDraw); }
     );
 
-    // Drawing Area Box Signals
+    // Drawing Areas actions
+    QObject::connect(ui.actionNoArea, &QAction::toggled, this,
+        [this](bool checked){ this->tryDrawingAreaAction(checked, DrawingArea::NONE, ui.actionNoArea); }
+    );
     QObject::connect(ui.actionDrivable, &QAction::toggled, this,
         [this](bool checked){ this->tryDrawingAreaAction(checked, DrawingArea::DRIVABLE, ui.actionDrivable); }
     );
@@ -49,31 +66,14 @@ void MainWindow::onZoomInOut(double factor) {
 }
 
 void MainWindow::tryDrawingModeAction(bool checked, const DrawingMode& mode, QAction* action) {
-    const DrawingMode& finalMode = checked ? mode : DrawingMode::NONE;
-    if (!setDrawingMode(finalMode)) {
-        forceActionState(action, !checked); // Reject state change
-        return;
-    }
-
-    if (currentToolAction != action) {
-        forceActionState(currentToolAction, false);
-        currentToolAction = action;
-    }
-
+    if (!checked) { return; }
+    setDrawingMode(mode);
     setCorrectInteractionMode();
 }
 
 void MainWindow::tryDrawingAreaAction(bool checked, const DrawingArea& area, QAction* action) {
-    const DrawingArea& finalArea = checked ? area : DrawingArea::NONE;
-    if (!setDrawingArea(finalArea)) {
-        forceActionState(action, !checked); // Reject state change
-    }
-
-    if (currentAreaAction != action) {
-        forceActionState(currentAreaAction, false);
-        currentAreaAction = action;
-    }
-
+    if (!checked) { return; }
+    setDrawingArea(area);
     setCorrectInteractionMode();
 }
 
@@ -93,11 +93,9 @@ void MainWindow::onStopDrawing() {
     scene->setDrawingEnabled(false);
     drawingArea = DrawingArea::NONE;
     drawingMode = DrawingMode::NONE;
-    forceActionState(ui.actionDraw, false);
-    forceActionState(ui.actionErase, false);
-    forceActionState(ui.actionDrivable, false);
-    currentToolAction = nullptr;
-    currentAreaAction = nullptr;
+    ui.actionNoTool->setChecked(true);
+    ui.actionNoArea->setChecked(true);
+
     setCorrectInteractionMode();
 }
 
@@ -118,7 +116,8 @@ void MainWindow::clearAllPolygons() {
 
 bool MainWindow::setDrawingMode(const DrawingMode& mode) {
     if (currentPolygon) {
-        QMessageBox::warning(nullptr, "Drawing Settings", "Please stop drawing before changing modes");
+        QMessageBox::warning(nullptr, "Drawing Tool", "Stop drawing before changing the tool!");
+        onStopDrawing();
         return false;
     }
 
@@ -127,7 +126,8 @@ bool MainWindow::setDrawingMode(const DrawingMode& mode) {
 }
 bool MainWindow::setDrawingArea(const DrawingArea& area) {
     if (currentPolygon) {
-        QMessageBox::warning(nullptr, "Drawing Settings", "Please stop drawing before changing areas");
+        QMessageBox::warning(nullptr, "Drawing Area", "Stop drawing before changing the area!");
+        onStopDrawing();
         return false;
     }
 

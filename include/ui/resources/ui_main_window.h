@@ -31,6 +31,8 @@ public:
     QAction *actionActions;
     QAction *actionClear;
     QAction *actionStop;
+    QAction *actionNoTool;
+    QAction *actionNoArea;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QGraphicsView *graphicsView;
@@ -78,6 +80,14 @@ public:
         actionClear->setObjectName(QString::fromUtf8("actionClear"));
         actionStop = new QAction(MainWindow);
         actionStop->setObjectName(QString::fromUtf8("actionStop"));
+        actionNoTool = new QAction(MainWindow);
+        actionNoTool->setObjectName(QString::fromUtf8("actionNoTool"));
+        actionNoTool->setCheckable(true);
+        actionNoTool->setChecked(true);
+        actionNoArea = new QAction(MainWindow);
+        actionNoArea->setObjectName(QString::fromUtf8("actionNoArea"));
+        actionNoArea->setCheckable(true);
+        actionNoArea->setChecked(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
@@ -108,11 +118,13 @@ public:
         toolBar->addSeparator();
         toolBar->addAction(actionTools);
         toolBar->addSeparator();
+        toolBar->addAction(actionNoTool);
         toolBar->addAction(actionDraw);
         toolBar->addAction(actionErase);
         toolBar->addSeparator();
         toolBar->addAction(actionAreas);
         toolBar->addSeparator();
+        toolBar->addAction(actionNoArea);
         toolBar->addAction(actionDrivable);
 
         retranslateUi(MainWindow);
@@ -154,6 +166,14 @@ public:
         actionStop->setText(QCoreApplication::translate("MainWindow", "Stop", nullptr));
 #if QT_CONFIG(tooltip)
         actionStop->setToolTip(QCoreApplication::translate("MainWindow", "Stop drawing", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionNoTool->setText(QCoreApplication::translate("MainWindow", "None", nullptr));
+#if QT_CONFIG(tooltip)
+        actionNoTool->setToolTip(QCoreApplication::translate("MainWindow", "Select this tool when not drawing", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionNoArea->setText(QCoreApplication::translate("MainWindow", "None", nullptr));
+#if QT_CONFIG(tooltip)
+        actionNoArea->setToolTip(QCoreApplication::translate("MainWindow", "Select this area when don't want to draw", nullptr));
 #endif // QT_CONFIG(tooltip)
         toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi

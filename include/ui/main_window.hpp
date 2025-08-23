@@ -49,8 +49,9 @@ private:
     utils::geometry::SmartPolygon::SharedPtr currentPolygon;
     utils::geometry::SmartMultiPolygon drivablePolygon;
 
-    QAction* currentToolAction = nullptr;
-    QAction* currentAreaAction = nullptr;
+    std::unique_ptr<QActionGroup> drawingToolsGroup;
+    std::unique_ptr<QActionGroup> drawingAreasGroup;
+
     void forceActionState(QAction* action, bool state);
     bool setDrawingMode(const DrawingMode& mode);
     void tryDrawingModeAction(bool checked, const DrawingMode& mode, QAction* action);

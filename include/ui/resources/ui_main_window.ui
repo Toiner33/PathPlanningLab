@@ -57,11 +57,13 @@
    <addaction name="separator"/>
    <addaction name="actionTools"/>
    <addaction name="separator"/>
+   <addaction name="actionNoTool"/>
    <addaction name="actionDraw"/>
    <addaction name="actionErase"/>
    <addaction name="separator"/>
    <addaction name="actionAreas"/>
    <addaction name="separator"/>
+   <addaction name="actionNoArea"/>
    <addaction name="actionDrivable"/>
   </widget>
   <action name="actionDraw">
@@ -172,6 +174,34 @@
    </property>
    <property name="toolTip">
     <string>Stop drawing</string>
+   </property>
+  </action>
+  <action name="actionNoTool">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>None</string>
+   </property>
+   <property name="toolTip">
+    <string>Select this tool when not drawing</string>
+   </property>
+  </action>
+  <action name="actionNoArea">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>None</string>
+   </property>
+   <property name="toolTip">
+    <string>Select this area when don't want to draw</string>
    </property>
   </action>
  </widget>
