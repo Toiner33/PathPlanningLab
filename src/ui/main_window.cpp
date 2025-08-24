@@ -7,6 +7,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
+    algorithmSelectorDialog(this),
     scene(std::make_shared<GraphicsScene>(this)),
     drivablePolygon(scene)
 {
@@ -25,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     drawingAreasGroup->addAction(ui.actionNoArea);
     drawingAreasGroup->addAction(ui.actionDrivable);
 
+    // Algorithms Tool Bar
+    QObject::connect(ui.actionAlgorithmSelector, &QAction::triggered, &algorithmSelectorDialog, &AlgorithmSelectorDialog::exec);
+    
+    
     // Drawing actions
     QObject::connect(ui.actionStop, &QAction::triggered, this, &MainWindow::onStopDrawing);
     QObject::connect(ui.actionClear, &QAction::triggered, this, &MainWindow::clearAllPolygons);

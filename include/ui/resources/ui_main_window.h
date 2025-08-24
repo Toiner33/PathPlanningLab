@@ -33,10 +33,13 @@ public:
     QAction *actionStop;
     QAction *actionNoTool;
     QAction *actionNoArea;
+    QAction *actionAlgorithmSelector;
+    QAction *actionToolBox;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QGraphicsView *graphicsView;
-    QToolBar *toolBar;
+    QToolBar *drawingBar;
+    QToolBar *AlgorithmBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -88,6 +91,13 @@ public:
         actionNoArea->setObjectName(QString::fromUtf8("actionNoArea"));
         actionNoArea->setCheckable(true);
         actionNoArea->setChecked(true);
+        actionAlgorithmSelector = new QAction(MainWindow);
+        actionAlgorithmSelector->setObjectName(QString::fromUtf8("actionAlgorithmSelector"));
+        actionAlgorithmSelector->setFont(font1);
+        actionToolBox = new QAction(MainWindow);
+        actionToolBox->setObjectName(QString::fromUtf8("actionToolBox"));
+        actionToolBox->setEnabled(false);
+        actionToolBox->setFont(font1);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
@@ -101,31 +111,42 @@ public:
         gridLayout->addWidget(graphicsView, 0, 0, 6, 1);
 
         MainWindow->setCentralWidget(centralwidget);
-        toolBar = new QToolBar(MainWindow);
-        toolBar->setObjectName(QString::fromUtf8("toolBar"));
+        drawingBar = new QToolBar(MainWindow);
+        drawingBar->setObjectName(QString::fromUtf8("drawingBar"));
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(toolBar->sizePolicy().hasHeightForWidth());
-        toolBar->setSizePolicy(sizePolicy);
-        MainWindow->addToolBar(Qt::RightToolBarArea, toolBar);
+        sizePolicy.setHeightForWidth(drawingBar->sizePolicy().hasHeightForWidth());
+        drawingBar->setSizePolicy(sizePolicy);
+        QFont font2;
+        font2.setPointSize(10);
+        drawingBar->setFont(font2);
+        MainWindow->addToolBar(Qt::RightToolBarArea, drawingBar);
+        AlgorithmBar = new QToolBar(MainWindow);
+        AlgorithmBar->setObjectName(QString::fromUtf8("AlgorithmBar"));
+        MainWindow->addToolBar(Qt::TopToolBarArea, AlgorithmBar);
 
-        toolBar->addSeparator();
-        toolBar->addAction(actionActions);
-        toolBar->addSeparator();
-        toolBar->addAction(actionClear);
-        toolBar->addAction(actionStop);
-        toolBar->addSeparator();
-        toolBar->addAction(actionTools);
-        toolBar->addSeparator();
-        toolBar->addAction(actionNoTool);
-        toolBar->addAction(actionDraw);
-        toolBar->addAction(actionErase);
-        toolBar->addSeparator();
-        toolBar->addAction(actionAreas);
-        toolBar->addSeparator();
-        toolBar->addAction(actionNoArea);
-        toolBar->addAction(actionDrivable);
+        drawingBar->addAction(actionToolBox);
+        drawingBar->addSeparator();
+        drawingBar->addSeparator();
+        drawingBar->addAction(actionTools);
+        drawingBar->addSeparator();
+        drawingBar->addAction(actionNoTool);
+        drawingBar->addAction(actionDraw);
+        drawingBar->addAction(actionErase);
+        drawingBar->addSeparator();
+        drawingBar->addAction(actionAreas);
+        drawingBar->addSeparator();
+        drawingBar->addAction(actionNoArea);
+        drawingBar->addAction(actionDrivable);
+        drawingBar->addSeparator();
+        drawingBar->addAction(actionActions);
+        drawingBar->addSeparator();
+        drawingBar->addAction(actionClear);
+        drawingBar->addAction(actionStop);
+        AlgorithmBar->addSeparator();
+        AlgorithmBar->addAction(actionAlgorithmSelector);
+        AlgorithmBar->addSeparator();
 
         retranslateUi(MainWindow);
 
@@ -175,7 +196,16 @@ public:
 #if QT_CONFIG(tooltip)
         actionNoArea->setToolTip(QCoreApplication::translate("MainWindow", "Select this area when don't want to draw", nullptr));
 #endif // QT_CONFIG(tooltip)
-        toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
+        actionAlgorithmSelector->setText(QCoreApplication::translate("MainWindow", "Algorithm", nullptr));
+#if QT_CONFIG(tooltip)
+        actionAlgorithmSelector->setToolTip(QCoreApplication::translate("MainWindow", "Click here to select algorithm and settings", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionToolBox->setText(QCoreApplication::translate("MainWindow", "ToolBox", nullptr));
+#if QT_CONFIG(tooltip)
+        actionToolBox->setToolTip(QCoreApplication::translate("MainWindow", "This bar contains actions related to drawing", nullptr));
+#endif // QT_CONFIG(tooltip)
+        drawingBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
+        AlgorithmBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar_2", nullptr));
     } // retranslateUi
 
 };

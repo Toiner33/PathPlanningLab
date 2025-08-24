@@ -14,6 +14,7 @@
 
 #include "ui/resources/ui_main_window.h"
 #include "ui/graphics_scene.hpp"
+#include "ui/algorithm_selector_dialog.hpp"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -45,6 +46,7 @@ private slots:
 private:
     Ui::MainWindow ui;
     std::shared_ptr<GraphicsScene> scene;
+    AlgorithmSelectorDialog algorithmSelectorDialog;
     
     utils::geometry::SmartPolygon::SharedPtr currentPolygon;
     utils::geometry::SmartMultiPolygon drivablePolygon;

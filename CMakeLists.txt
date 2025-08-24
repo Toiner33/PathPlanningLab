@@ -22,8 +22,10 @@ include_directories(include)
 
 file(GLOB UI_SOURCE_FILES
     src/ui/*.cpp
+    src/ui/algorithms_settings/*.cpp
     # Needed here to trigger the MOC for Q_OBJECT Macro
     include/ui/*.hpp
+    include/ui/algorithms_settings/*.hpp
 )
 
 file(GLOB_RECURSE UTILS_SOURCES
