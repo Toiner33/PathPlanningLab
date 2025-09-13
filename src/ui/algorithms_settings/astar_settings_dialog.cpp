@@ -1,9 +1,10 @@
 #include "ui/algorithms_settings/astar_settings_dialog.hpp"
 
+namespace ui {
+namespace algorithms_settings {
+
 AStarSettingsDialog::AStarSettingsDialog(QWidget *parent)
-    : QDialog(parent)
-{
-    this->setObjectName(WINDOW_TITLE);
-    ui.setupUi(this);
-    this->setWindowTitle(WINDOW_TITLE);
-}
+    : AlgorithmSettingsDialog(parent, WINDOW_TITLE) { }
+
+}  // namespace algorithms_settings
+}  // namespace ui

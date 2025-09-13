@@ -5,6 +5,8 @@
 #include "ui/main_window.hpp"
 #include "ui/graphics_scene.hpp"
 
+namespace ui {
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     algorithmSelectorDialog(this),
@@ -27,8 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     drawingAreasGroup->addAction(ui.actionDrivable);
 
     // Algorithms Tool Bar
-    QObject::connect(ui.actionAlgorithmSelector, &QAction::triggered, &algorithmSelectorDialog, &AlgorithmSelectorDialog::exec);
-    
+    QObject::connect(ui.actionAlgorithmSelector, &QAction::triggered, &algorithmSelectorDialog, &ui::AlgorithmSelectorDialog::exec);
     
     // Drawing actions
     QObject::connect(ui.actionStop, &QAction::triggered, this, &MainWindow::onStopDrawing);
@@ -257,3 +258,5 @@ QColor MainWindow::getColor(
         return areaColorsMap.at(area);
     }
 }
+
+}  // namespace ui

@@ -20,7 +20,7 @@ add_definitions("-DBOOST_ALLOW_DEPRECATED_HEADERS")
 # Include directories
 include_directories(include)
 
-file(GLOB UI_SOURCE_FILES
+file(GLOB_RECURSE UI_SOURCE_FILES
     src/ui/*.cpp
     src/ui/algorithms_settings/*.cpp
     # Needed here to trigger the MOC for Q_OBJECT Macro

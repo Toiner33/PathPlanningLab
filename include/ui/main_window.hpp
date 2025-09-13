@@ -16,6 +16,8 @@
 #include "ui/graphics_scene.hpp"
 #include "ui/algorithm_selector_dialog.hpp"
 
+namespace ui {
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -46,7 +48,7 @@ private slots:
 private:
     Ui::MainWindow ui;
     std::shared_ptr<GraphicsScene> scene;
-    AlgorithmSelectorDialog algorithmSelectorDialog;
+    ui::AlgorithmSelectorDialog algorithmSelectorDialog;
     
     utils::geometry::SmartPolygon::SharedPtr currentPolygon;
     utils::geometry::SmartMultiPolygon drivablePolygon;
@@ -79,3 +81,5 @@ private:
         {DrawingArea::DRIVABLE, utils::visuals::colors::drivableGreen}
     };
 };
+
+}  // namespace ui

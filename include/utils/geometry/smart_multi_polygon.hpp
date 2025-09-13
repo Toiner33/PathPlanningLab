@@ -13,7 +13,7 @@ namespace geometry {
     
 class SmartMultiPolygon {
 public:
-    SmartMultiPolygon(const std::shared_ptr<GraphicsScene>& scene);
+    SmartMultiPolygon(const std::shared_ptr<ui::GraphicsScene>& scene);
     ~SmartMultiPolygon();
 
     const SmartPolygon::ConstSharedPtr back() const { return smartPolygons.back(); }
@@ -26,7 +26,7 @@ public:
     bool mergeOverlapping();
     bool eraseOverlapping(const SmartPolygon& eraserPolygon);
 private:
-    std::shared_ptr<GraphicsScene> parentScene;
+    std::shared_ptr<ui::GraphicsScene> parentScene;
     std::list<SmartPolygon::SharedPtr> smartPolygons;
 };
 

@@ -11,12 +11,13 @@
 #include <array>
 #include <cmath>
 
+namespace ui {
+
 class GraphicsScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
     GraphicsScene(QObject* parent = nullptr);
-    // void drawGrid(int rows, int cols, int cellSize);
     void setDrawingEnabled(bool enabled);
         
 signals:
@@ -38,9 +39,7 @@ protected:
 private:
     static constexpr double backgroundGridSize = 50;
     static constexpr double zoomFactor = 1.15;
-
-    // int cellResolution;
-    // std::array<int, 2> gridSize;
-    // std::unordered_map<int, QGraphicsRectItem*> cellMap;
     bool drawingEnabled = false;
 };
+
+}  // namespace ui

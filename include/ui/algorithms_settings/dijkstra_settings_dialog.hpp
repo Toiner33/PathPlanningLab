@@ -1,21 +1,17 @@
-#ifndef DIJKSTRA_SETTINGS_DIALOG_HPP
-#define DIJKSTRA_SETTINGS_DIALOG_HPP
+#pragma once
 
-#include <QDialog>
+#include "ui/algorithms_settings/algorithm_settings_dialog.hpp"
 
-#include "ui/resources/algorithm_settings_dialog.h"
+namespace ui {
+namespace algorithms_settings {
 
-class DijkstraSettingsDialog : public QDialog
-{
-    Q_OBJECT
-
+class DijkstraSettingsDialog : public AlgorithmSettingsDialog {
 public:
-    explicit DijkstraSettingsDialog(QWidget *parent = nullptr);
+    DijkstraSettingsDialog(QWidget *parent = nullptr);
 
 private:
     static constexpr const char* WINDOW_TITLE = "Dijkstra Settings";
-
-    Ui::SettingsDialog ui;
 };
 
-#endif // DIJKSTRA_SETTINGS_DIALOG_HPP
+}  // namespace ui
+}  // namespace algorithms_settings

@@ -1,21 +1,17 @@
-#ifndef ASTAR_SETTINGS_DIALOG_HPP
-#define ASTAR_SETTINGS_DIALOG_HPP
+#pragma once
 
-#include <QDialog>
+#include "ui/algorithms_settings/algorithm_settings_dialog.hpp"
 
-#include "ui/resources/algorithm_settings_dialog.h"
+namespace ui {
+namespace algorithms_settings {
 
-class AStarSettingsDialog : public QDialog
-{
-    Q_OBJECT
-
+class AStarSettingsDialog : public AlgorithmSettingsDialog {
 public:
-    explicit AStarSettingsDialog(QWidget *parent = nullptr);
+    AStarSettingsDialog(QWidget *parent = nullptr);
 
 private:
     static constexpr const char* WINDOW_TITLE = "AStar Settings";
-
-    Ui::SettingsDialog ui;
 };
 
-#endif // ASTAR_SETTINGS_DIALOG_HPP
+}  // namespace ui
+}  // namespace algorithms_settings

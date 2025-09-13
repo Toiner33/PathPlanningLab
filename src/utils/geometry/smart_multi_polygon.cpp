@@ -6,7 +6,7 @@
 namespace utils {
 namespace geometry {
     
-SmartMultiPolygon::SmartMultiPolygon(const std::shared_ptr<GraphicsScene>& scene):
+SmartMultiPolygon::SmartMultiPolygon(const std::shared_ptr<ui::GraphicsScene>& scene):
     parentScene(scene) { };
 
 SmartMultiPolygon::~SmartMultiPolygon() {
