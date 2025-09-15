@@ -32,8 +32,12 @@ file(GLOB_RECURSE UTILS_SOURCES
     src/utils/*.cpp
 )
 
+file(GLOB_RECURSE CORE_SOURCES
+    src/core/*.cpp
+)
+
 # Create the executable
-add_executable(${PROJECT_NAME} ${UTILS_SOURCES} ${UI_SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${UTILS_SOURCES} ${UI_SOURCE_FILES} ${CORE_SOURCES})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Debug mode enabled")
