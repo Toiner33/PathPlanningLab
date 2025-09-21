@@ -28,6 +28,8 @@ public:
 
     double& at(const Cell& gridCell);
     double at(const Cell& gridCell) const;
+    double at(size_t layer, const Cell& gridCell);
+    double at(size_t layer, const Cell& gridCell) const;
 
 private:
     int width;

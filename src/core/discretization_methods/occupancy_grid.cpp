@@ -65,6 +65,14 @@ double OccupancyGrid::at(const OccupancyGrid::Cell& gridCell) const {
     return layers.at(currentLayer).at(gridCellToIndex(gridCell)); 
 }
 
+double OccupancyGrid::at(size_t layer, const Cell& gridCell) {
+    return layers.at(layer).at(gridCellToIndex(gridCell));
+}
+
+double OccupancyGrid::at(size_t layer, const Cell& gridCell) const {
+    return layers.at(layer).at(gridCellToIndex(gridCell));
+}
+
 // === Private definitions ===
 
 size_t OccupancyGrid::gridCellToIndex(const Cell& gridCell) const {
