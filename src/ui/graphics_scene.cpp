@@ -13,11 +13,19 @@ void GraphicsScene::setDrawingEnabled(bool enabled) {
     drawingEnabled = enabled;
 }
 
+void GraphicsScene::setPointSelection(bool enabled) {
+    selectingPoint = enabled;
+}
+
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {    
     if (event->button() == Qt::LeftButton) {
-        emit drawingEnabled ? 
-            pointClicked(event->scenePos()) :
-            sceneClicked(event->scenePos());
+        if (drawingEnabled) {
+            emit pointClicked(event->scenePos());
+        } else if (selectingPoint) {
+            emit startOrGoalClicked(event->scenePos(), true);
+        } else {
+            emit sceneClicked(event->scenePos());
+        }
     }
     QGraphicsScene::mousePressEvent(event);
 }
@@ -31,14 +39,26 @@ void GraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) {
 
 void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
     if (drawingEnabled) {
+        // TODO(adri): enable this when selecting to draw preview of orientation.
         emit cursorMoved(event->scenePos());
     }
     QGraphicsScene::mouseMoveEvent(event);
 }
 
+void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
+    if (selectingPoint) {
+        emit startOrGoalClicked(event->scenePos(), false);
+    }
+    QGraphicsScene::mouseReleaseEvent(event);
+}
+
 void GraphicsScene::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Escape) {
-        emit stopDrawing();
+        if (drawingEnabled) {
+            emit stopDrawing();
+        } else if (selectingPoint) {
+            emit stopSelecting();
+        }
     }
     QGraphicsScene::keyPressEvent(event);
 }

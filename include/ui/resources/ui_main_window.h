@@ -35,6 +35,9 @@ public:
     QAction *actionNoArea;
     QAction *actionAlgorithmSelector;
     QAction *actionToolBox;
+    QAction *actionSet_Start;
+    QAction *actionSet_Goal;
+    QAction *actionFind_Path;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QGraphicsView *graphicsView;
@@ -98,6 +101,19 @@ public:
         actionToolBox->setObjectName(QString::fromUtf8("actionToolBox"));
         actionToolBox->setEnabled(false);
         actionToolBox->setFont(font1);
+        actionSet_Start = new QAction(MainWindow);
+        actionSet_Start->setObjectName(QString::fromUtf8("actionSet_Start"));
+        actionSet_Start->setCheckable(true);
+        QFont font2;
+        font2.setBold(true);
+        font2.setWeight(75);
+        actionSet_Start->setFont(font2);
+        actionSet_Goal = new QAction(MainWindow);
+        actionSet_Goal->setObjectName(QString::fromUtf8("actionSet_Goal"));
+        actionSet_Goal->setCheckable(true);
+        actionSet_Goal->setFont(font2);
+        actionFind_Path = new QAction(MainWindow);
+        actionFind_Path->setObjectName(QString::fromUtf8("actionFind_Path"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
@@ -118,12 +134,13 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(drawingBar->sizePolicy().hasHeightForWidth());
         drawingBar->setSizePolicy(sizePolicy);
-        QFont font2;
-        font2.setPointSize(10);
-        drawingBar->setFont(font2);
+        QFont font3;
+        font3.setPointSize(10);
+        drawingBar->setFont(font3);
         MainWindow->addToolBar(Qt::RightToolBarArea, drawingBar);
         AlgorithmBar = new QToolBar(MainWindow);
         AlgorithmBar->setObjectName(QString::fromUtf8("AlgorithmBar"));
+        AlgorithmBar->setFont(font2);
         MainWindow->addToolBar(Qt::TopToolBarArea, AlgorithmBar);
 
         drawingBar->addAction(actionToolBox);
@@ -147,6 +164,11 @@ public:
         AlgorithmBar->addSeparator();
         AlgorithmBar->addAction(actionAlgorithmSelector);
         AlgorithmBar->addSeparator();
+        AlgorithmBar->addAction(actionSet_Start);
+        AlgorithmBar->addSeparator();
+        AlgorithmBar->addAction(actionSet_Goal);
+        AlgorithmBar->addSeparator();
+        AlgorithmBar->addAction(actionFind_Path);
 
         retranslateUi(MainWindow);
 
@@ -203,6 +225,18 @@ public:
         actionToolBox->setText(QCoreApplication::translate("MainWindow", "ToolBox", nullptr));
 #if QT_CONFIG(tooltip)
         actionToolBox->setToolTip(QCoreApplication::translate("MainWindow", "This bar contains actions related to drawing", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionSet_Start->setText(QCoreApplication::translate("MainWindow", "Set Start", nullptr));
+#if QT_CONFIG(tooltip)
+        actionSet_Start->setToolTip(QCoreApplication::translate("MainWindow", "Select the start position for the path finding", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionSet_Goal->setText(QCoreApplication::translate("MainWindow", "Set Goal", nullptr));
+#if QT_CONFIG(tooltip)
+        actionSet_Goal->setToolTip(QCoreApplication::translate("MainWindow", "Select the goal postiion for the path finding", nullptr));
+#endif // QT_CONFIG(tooltip)
+        actionFind_Path->setText(QCoreApplication::translate("MainWindow", "Find Path", nullptr));
+#if QT_CONFIG(tooltip)
+        actionFind_Path->setToolTip(QCoreApplication::translate("MainWindow", "Click this button to start the path finding search", nullptr));
 #endif // QT_CONFIG(tooltip)
         drawingBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
         AlgorithmBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar_2", nullptr));

@@ -32,6 +32,10 @@ void SmartMultiPolygon::clear(){
     while (!smartPolygons.empty()) { popPolygon(); }
 }
 
+bool SmartMultiPolygon::empty() const {
+    return smartPolygons.empty();
+}
+
 bool SmartMultiPolygon::mergeOverlapping() {
     auto getIntersectingPolygonIt = [
         &smartPolygons = smartPolygons

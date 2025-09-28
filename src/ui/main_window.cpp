@@ -30,7 +30,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Algorithms Tool Bar
     QObject::connect(ui.actionAlgorithmSelector, &QAction::triggered, &algorithmSelectorDialog, &ui::AlgorithmSelectorDialog::exec);
-    
+    QObject::connect(ui.actionSet_Start, &QAction::triggered, this,
+        [this](bool checked){ return checked ? this->onStartSelecting(StartOrGoal::START) : this->onStopSelecting(); }
+    );
+    QObject::connect(ui.actionSet_Goal, &QAction::triggered, this,
+        [this](bool checked){ return checked ? this->onStartSelecting(StartOrGoal::GOAL) : this->onStopSelecting(); }
+    );
+
     // Drawing actions
     QObject::connect(ui.actionStop, &QAction::triggered, this, &MainWindow::onStopDrawing);
     QObject::connect(ui.actionClear, &QAction::triggered, this, &MainWindow::clearAllPolygons);
@@ -61,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(scene.get(), &GraphicsScene::cursorMoved, this, &MainWindow::onCursorMoved);
     QObject::connect(scene.get(), &GraphicsScene::stopDrawing, this, &MainWindow::onStopDrawing);
     QObject::connect(scene.get(), &GraphicsScene::zoomInOut, this, &MainWindow::onZoomInOut);
+    QObject::connect(scene.get(), &GraphicsScene::startOrGoalClicked, this, &MainWindow::onStartOrGoalClicked);
 
     // scene->drawGrid(25, 25, 20);
 }
@@ -105,8 +112,17 @@ void MainWindow::onStopDrawing() {
     setCorrectInteractionMode();
 }
 
+void MainWindow::onStopSelecting() {
+    scene->setPointSelection(false);
+    startOrGoal = StartOrGoal::NONE;
+    ui.actionSet_Start->setChecked(false);
+    ui.actionSet_Goal->setChecked(false);
+    setCorrectInteractionMode();
+}
+
 void MainWindow::setCorrectInteractionMode() {
-    if (isDrawing()) {
+    bool isSelecting = ui.actionSet_Start->isChecked() || ui.actionSet_Goal->isChecked();
+    if (isDrawing() || isSelecting) {
         ui.graphicsView->setCursor(Qt::CrossCursor);
         ui.graphicsView->setDragMode(QGraphicsView::NoDrag);
     } else {
@@ -164,6 +180,41 @@ void MainWindow::onStartDrawing() {
     scene->setDrawingEnabled(true);
 }
 
+void MainWindow::onStartSelecting(const StartOrGoal& startOrGoalInput) {
+    if (startOrGoal != StartOrGoal::NONE) {
+        QMessageBox::warning(nullptr, "Selecting Point", "Stop selecting before changing the point!");
+        onStopSelecting();
+        return;
+    }
+
+    if (isDrawing()) {
+        QMessageBox::warning(nullptr, "Selecting Point", "Stop drawing before selecting a point!");
+        onStopSelecting();
+        return;
+    }
+    
+    if (drivablePolygon.empty()) {
+        QMessageBox::warning(nullptr, "Selecting Point", "There is no drivable space to select a point!");
+        onStopSelecting();
+        return;    
+    }
+
+    scene->setPointSelection(true);
+    startOrGoal = startOrGoalInput;
+    setCorrectInteractionMode();
+}
+
+void MainWindow::onStartOrGoalClicked(const QPointF& point, bool reference) {
+    SelectionPoint& startOrGoalSelection = startOrGoal == StartOrGoal::START ? startPoint : goalPoint;
+    if (startOrGoalSelection) {
+        QPointF& startOrGoalPoint = reference ? startOrGoalSelection->first : startOrGoalSelection->second;
+        startOrGoalPoint = point;
+    } else {
+        startOrGoalSelection = std::make_pair(point, point);
+    }
+    if (!reference) { onStopSelecting(); }
+}
+
 void MainWindow::onPointClicked(const QPointF& point) {
     currentPolygon->addPoint(point);
 }
@@ -183,6 +234,7 @@ void MainWindow::onDoubleClick(const QPointF& point) {
 
 void MainWindow::onCursorMoved(const QPointF& point) {
     currentPolygon->setPreview(point);
+    // TODO(adri): implement preview for point orientation
 }
 
 utils::geometry::SmartMultiPolygon* MainWindow::activeArea() {

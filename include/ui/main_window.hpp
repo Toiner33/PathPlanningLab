@@ -22,6 +22,8 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
+    using SelectionPoint = std::optional<std::pair<QPointF, QPointF>>;
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -36,20 +38,32 @@ public:
         DRIVABLE
     };
 
+    enum class StartOrGoal {
+        NONE,
+        START,
+        GOAL
+    };
+
 private slots:
     void onStartDrawing();
+    void onStartSelecting(const StartOrGoal& startOrGoal);
     void onPointClicked(const QPointF& point);
     void onSceneClicked(const QPointF& point);
+    void onStartOrGoalClicked(const QPointF& point, bool reference);
     void onDoubleClick(const QPointF& point);
     void onCursorMoved(const QPointF& point);
     void onStopDrawing();
+    void onStopSelecting();
     void onZoomInOut(double factor);
 
 private:
     Ui::MainWindow ui;
     std::shared_ptr<GraphicsScene> scene;
     ui::AlgorithmSelectorDialog algorithmSelectorDialog;
-    
+    SelectionPoint startPoint;
+    SelectionPoint goalPoint;
+    StartOrGoal startOrGoal = StartOrGoal::NONE;
+
     utils::geometry::SmartPolygon::SharedPtr currentPolygon;
     utils::geometry::SmartMultiPolygon drivablePolygon;
 

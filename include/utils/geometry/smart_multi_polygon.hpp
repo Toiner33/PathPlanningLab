@@ -22,6 +22,8 @@ public:
     void addPolygon(SmartPolygon::SharedPtr&& newPolygon);
     void popPolygon();
     void clear();
+
+    bool empty() const;
     
     bool mergeOverlapping();
     bool eraseOverlapping(const SmartPolygon& eraserPolygon);

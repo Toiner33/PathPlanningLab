@@ -74,6 +74,12 @@
    <addaction name="actionStop"/>
   </widget>
   <widget class="QToolBar" name="AlgorithmBar">
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="windowTitle">
     <string>toolBar_2</string>
    </property>
@@ -86,6 +92,11 @@
    <addaction name="separator"/>
    <addaction name="actionAlgorithmSelector"/>
    <addaction name="separator"/>
+   <addaction name="actionSet_Start"/>
+   <addaction name="separator"/>
+   <addaction name="actionSet_Goal"/>
+   <addaction name="separator"/>
+   <addaction name="actionFind_Path"/>
   </widget>
   <action name="actionDraw">
    <property name="checkable">
@@ -256,6 +267,48 @@
      <weight>75</weight>
      <bold>true</bold>
     </font>
+   </property>
+  </action>
+  <action name="actionSet_Start">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Set Start</string>
+   </property>
+   <property name="toolTip">
+    <string>Select the start position for the path finding</string>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+  </action>
+  <action name="actionSet_Goal">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Set Goal</string>
+   </property>
+   <property name="toolTip">
+    <string>Select the goal postiion for the path finding</string>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+  </action>
+  <action name="actionFind_Path">
+   <property name="text">
+    <string>Find Path</string>
+   </property>
+   <property name="toolTip">
+    <string>Click this button to start the path finding search</string>
    </property>
   </action>
  </widget>
